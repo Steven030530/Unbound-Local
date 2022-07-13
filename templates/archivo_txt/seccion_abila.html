@@ -1,0 +1,31 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'style-abila.css' %}" type="text/css">
+    <title>ABILA</title>
+</head>
+<body>
+
+    <header class="header">SISTEMA ABILA</header>
+    <div class="contenedor-imagen">
+        <a href="ingreso/"><img src="/static/images/Ingreso_Abila.svg" alt="Ingreso_Abila"></a>
+        <a href="egreso/"><img src="/static/images/Egreso_Abila.svg" alt="Egreso_Abila"></a>
+        <img src="/static/images/Empleado.svg" alt="Empleados">
+    </div>
+
+    <div class="contenedor-text">
+        <h4>INGRESOS</h4>
+        <h4>EGRESOS</h4>
+        <h4>NOMINA</h4>
+    </div>
+
+    <button class="btn-regresar"><a href="{% url 'unbound_app:inicio' %}">INICIO</a></button>
+    
+</body>
+</html>

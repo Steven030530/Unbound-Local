@@ -1,0 +1,89 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header{
+    background-color: lightblue;
+    height: 100px;
+    width: 100%;
+    text-align: center;
+    padding-top: 30px;
+    color: black;
+    
+}
+
+.logo{
+    display: block;
+    position: relative;
+    left: 550px;
+    text-align: center;
+    height: 130px;
+    object-fit: cover;
+    
+}
+
+.div1 {
+    display: flexbox;
+    height: 550px;
+    width: 33%;
+    
+    
+}
+
+
+.img-txt{
+    display: block;
+    height: 280px;
+    width: 280px;
+    position: absolute;
+    left: 120px;
+    
+
+}
+
+.logo-siigo{
+    display: block;
+    height: 280px;
+    width: 280px;
+    position: absolute;
+    left: 600px;
+
+}
+
+.img-abila{
+    display: block;
+    height: 280px;
+    width: 280px;
+    position: absolute;
+    left:1100px;
+}
+
+
+footer{
+    border-top: 2px solid darkblue;
+    
+}
+
+.text-box{
+    display: flex;
+}
+
+h3{
+    display: inline;
+    width: 100%;
+    position: relative;
+    margin-right: 80px;
+    margin-left: 160px;
+    margin-top: 49px;
+    margin-bottom: 5px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+h4{
+    font-family: 'Times New Roman', Times, serif;
+    text-align: center;
+    font-size: 20px;
+}
+

@@ -1,0 +1,256 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.flex-container{
+    display:flex;
+    
+}
+
+.text-container{
+    display: flex;
+    
+}
+
+h4{ 
+    display: block;
+    margin-top: 50px;
+    margin-right: 50px;
+    margin-left: 150px;
+    width: 100%;
+    font-size: 23px;
+    
+}
+
+body{
+    background: linear-gradient(lightblue,white);
+    background-repeat: no-repeat;
+}
+
+img{
+    width: 300px;
+    height: 300px;
+    margin-left: 150px;
+    margin-top: 100px;
+    box-shadow: 5px 10px 18px black;
+}
+
+.header{
+    font-size: 50px;
+    text-align: center;
+    background-color: rgb(91, 190, 239);
+    color: white;
+    font-family: 'Concert One', cursive;
+}
+
+.btn-regresar{
+    display: block;
+    margin: auto;
+    margin-top: 90px;
+    font-size: 20px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+a{
+    text-decoration: none;
+}
+
+
+
+.img-siigo{
+    box-shadow: none;
+    position: absolute;
+    left: -75px;
+    width: 500px;
+    height: 500px;
+}
+
+.form-cta28{
+    position: relative;
+    top: 60px;
+    left: 250px;
+    width: 450px;
+}
+
+input{
+    display: block;
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+h3{
+    margin-left: 0px;
+    margin-top: 55px;
+    font-size: 28px;
+}
+
+.btn-enviar{
+    margin-top: 55px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    
+}
+
+.btn-enviar:hover{
+    background-color: greenyellow;
+    cursor: pointer;
+    animation: escalar2 2s;
+}
+
+.success{
+    display: block;
+    color: rgb(28, 167, 26);
+    font-weight: bold;
+    border: 1px solid ;
+    margin-top: 20px;
+    width: 50%;
+}
+
+.error{
+    display: block;
+    color: rgb(255, 47, 47);
+    font-weight: bold;
+    border: 1px solid ;
+    margin-top: 20px;
+    width: 50%;
+}
+
+
+  
+
+.title{
+    font-family: 'Concert One', cursive;
+    font-size: 80px;
+    color: rgb(1, 2, 11);
+    
+}
+
+svg{
+    position: absolute;
+    right: 550px;
+    width: 400px;
+    margin-top: 110px;
+    opacity: 70%;
+    transition: all 2s;
+    
+  }
+
+
+.confeti1{
+    position: absolute;
+    margin-top: -210px;
+    opacity: 70%;
+    margin-right: 30px;
+    transition: all 2s;
+}
+
+.confeti2{
+    position: absolute;
+    margin-top: -210px;
+    opacity: 70%;
+    margin-right: 490px;
+    transition: all 2s;
+  }
+
+.confeti3{
+    position: absolute;
+    margin-top: -210px;
+    opacity: 70%;
+    margin-right: -490px;
+    transition: all 2s;
+  }
+ 
+
+.circle1{
+    animation: escalar 3s ;
+  }
+
+  .path1{
+    animation: trasladar 3s;
+  }
+
+  .path2{
+    animation: rotar  3s ;
+  }
+
+  .path3{
+    animation: trasladar2 3s;
+  }
+
+  .cancel{
+    animation: escalar 3s;
+  }
+
+
+  .btn-enviar:hover{
+    cursor: pointer;
+  }
+
+@keyframes rotar {
+
+    from{
+        transform: rotate(0);
+        opacity: 100%;
+        
+    }
+
+    to{
+        transform: rotate(15deg);
+        opacity: 0%;
+    }
+    
+  }
+
+  @keyframes trasladar{
+    from{
+        transform:translateY(0px) ;
+        opacity: 100%;
+
+    }
+
+    to{
+        transform: translateY(500px) ;
+        opacity: 0%;
+    }
+  }
+
+  @keyframes escalar{
+    from{
+        transform:scale(0.5);
+        opacity: 100%;
+
+    }
+
+    to{
+        transform: scale(1)  ;
+        opacity: 0%;
+    }
+  }
+
+  @keyframes trasladar2{
+    from{
+        transform:translateY(-10px) ;
+        opacity: 100%;
+
+    }
+
+    to{
+        transform: translateY(400px) ;
+        opacity: 0%;
+    }
+  }
+
+  @keyframes escalar2{
+    from{
+        transform:scale(1);
+        
+
+    }
+
+    to{
+        transform: scale(1.3)  ;
+        
+    }
+  }

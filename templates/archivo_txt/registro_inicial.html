@@ -1,0 +1,43 @@
+
+
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'style-siigo.css' %}" type="text/css">
+    <title>Registro</title>
+</head>
+
+<body>
+
+        <header class="header">SISTEMA SIIGO</header>
+
+        <div class="flex-container">
+            
+            <a href="cuenta_28/"><img src="/static/images/siigo-ingreso2.svg" alt="img cta28" title="INGRESO FORMATO CUENTA 28"></a>
+            
+            <a href="cuenta_41/"><img src="/static/images/siigo-ingreso4.svg" alt="img cta41" title="INGRESO FORMATO CUENTA 41"></a>
+            
+            <a href="egreso/"><img src="/static/images/siigo-egreso.svg" alt="img egreso" title="EGRESOS FORMATO"></a>
+            
+        </div>
+
+        <div class="text-container">
+            <h4>INGRESOS CUENTA 28</h4>
+            <h4>INGRESOS CUENTA 41</h4>
+            <h4>EGRESOS</h4>   
+        </div>
+
+        <button class="btn-regresar"><a href="{% url 'unbound_app:inicio' %}">INICIO</a></button>
+
+
+
+    
+</body>
+
+</html>
