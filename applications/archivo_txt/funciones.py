@@ -37,7 +37,7 @@ def archivo_txt(name,fecha):
 
     # CREAMOS UN DATAFRAME CON LOS REQUERIMIENTOS ESTABLECIDOS POR EFECTY 
 
-        efecty = pd.read_excel(r"C:\Users\darwi\Desktop\unbound\static\Modelo TXT Efecty.xlsx")
+        efecty = pd.read_excel("static\Modelo TXT Efecty.xlsx")
 
         efecty["Documento"] = data_ok["CC Acudiente"]
         efecty["co"] = '"'

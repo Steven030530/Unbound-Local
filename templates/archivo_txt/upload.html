@@ -1,6 +1,5 @@
 {% load static %}
 
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -11,8 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Concert+One&family=Fredoka+One&family=Righteous&display=swap" rel="stylesheet">
-
-    <title>TXT</title>
+  
 </head>
 <body>
     
@@ -227,11 +225,10 @@
     </g>
 
         </svg>
-        {% endif %}
-
+        {% endif %}            
         
             
-        {% ifnotequal error  var1 %} 
+        {% ifnotequal error var1  %} 
             <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                 viewBox="0 0 47.095 47.095" style="enable-background:new 0 0 47.095 47.095;" xml:space="preserve">
                 <g>
@@ -257,7 +254,7 @@
             {% endifnotequal %}
                
            
-        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+        <form method="post" enctype="multipart/form-data">{% csrf_token %} 
             <h3>Cargar Archivo Dispersion Unificada</h3>
             <input type="file" class="carga" name="ArchivoTxt" required>
             <h3>Seleccionar Fecha</h3>

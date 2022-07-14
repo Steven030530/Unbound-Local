@@ -4,6 +4,9 @@ from django.urls import path
 from requests import request
 from . import views
 from applications.archivo_txt.funciones import archivo_txt
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 
 
@@ -19,5 +22,5 @@ urlpatterns = [
     path("abila/",views.Abila.as_view(),name="abila"),
     path("abila/ingreso/",views.ingreso_abila,name="abila_ingreso"),
     path("abila/egreso/",views.egreso_abila,name="egreso_ingreso"),
-]
+] +static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
 

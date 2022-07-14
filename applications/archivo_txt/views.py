@@ -1,3 +1,5 @@
+from calendar import c
+from re import X
 from django.shortcuts import render
 from django.views.generic import TemplateView,ListView
 from applications.archivo_txt.funciones import archivo_txt, ingreso_28 , ingreso_41 , egreso_general_siigo
@@ -31,9 +33,11 @@ def upload(request):
              archivo_txt(uploaded_file,uploaded_date)
              context['url'] = fs.url(name)
              
+             
         except Exception as e:
             context.update({'error':'error'})
             print(repr(e))
+    
     return render(request,"archivo_txt/upload.html",context)
 
 def cuenta_28(request):
@@ -54,7 +58,7 @@ def cuenta_28(request):
         except Exception as e:
             context.update({'error':'error'})
             print(repr(e))
-        
+  
     return render(request,"archivo_txt/ingreso_28.html",context)
 
 def cuenta_41(request):
