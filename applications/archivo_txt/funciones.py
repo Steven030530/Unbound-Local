@@ -37,7 +37,7 @@ def archivo_txt(name,fecha):
 
     # CREAMOS UN DATAFRAME CON LOS REQUERIMIENTOS ESTABLECIDOS POR EFECTY 
 
-        efecty = pd.read_excel("static\Modelo TXT Efecty.xlsx")
+        efecty = pd.read_excel("/webapps/project/proyectoantioquia/static/Modelo TXT Efecty.xlsx")
 
         efecty["Documento"] = data_ok["CC Acudiente"]
         efecty["co"] = '"'
@@ -186,7 +186,7 @@ def ingreso_41(name,date,consecutivo):
 
     # REGISTRAMOS LOS VALORES EN EL ARCHIVO MODELO PARA LA IMPORTACION 
 
-    modelo = pd.read_excel(r"C:\Users\darwi\Desktop\unbound\static\Comprobante Modelo.xlsx")
+    modelo = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
     modelo["Código centro/subcentro de costos"] = tabla1["Subproyecto"]
     modelo["Código cuenta contable"] = cuenta_ingreso
     modelo["Consecutivo comprobante"] = consecutivo
@@ -317,7 +317,7 @@ def ingreso_28(name,date,consecutivo):
             numero_egreso = 1
             
             for y in lista_datos:
-                aporte_general = pd.read_excel(r"C:\Users\darwi\Desktop\unbound\static\Comprobante Modelo.xlsx")
+                aporte_general = pd.read_excel("/webapps/project/proyectoantioquia/static/Comprobante Modelo.xlsx")
                 aporte_general["Código centro/subcentro de costos"] = y["SUBP"]
                 if k == "V":
                     aporte_general["Código cuenta contable"] = 28150520
@@ -339,7 +339,7 @@ def ingreso_28(name,date,consecutivo):
 
             # APORTE CUMPLEAÑOS
 
-            aporte_cumple = pd.read_excel(r"C:\Users\darwi\Desktop\unbound\static\Comprobante Modelo.xlsx")
+            aporte_cumple = pd.read_excel("/webapps/project/proyectoantioquia/static/Comprobante Modelo.xlsx")
             aporte_cumple["Código centro/subcentro de costos"] = datos["SUBP"]
             aporte_cumple["Código cuenta contable"] = 28150530
             aporte_cumple["Consecutivo comprobante"] = consecutivo
@@ -361,7 +361,7 @@ def ingreso_28(name,date,consecutivo):
 
             # APORTE REGALOS ESPECIALES              
 
-            aporte_regalo = pd.read_excel(r"C:\Users\darwi\Desktop\unbound\static\Comprobante Modelo.xlsx")
+            aporte_regalo = pd.read_excel("/webapps/project/proyectoantioquia/static/Comprobante Modelo.xlsx")
             aporte_regalo["Código centro/subcentro de costos"] = datos["SUBP"]
             aporte_regalo["Código cuenta contable"] = 28150510
             aporte_regalo["Consecutivo comprobante"] = consecutivo
@@ -471,7 +471,7 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
             for j in lista_datos:
 
                 print("Consecutivo Nro: " + str(comprobante))
-                modelo = pd.read_excel(r"C:\Users\darwi\Desktop\unbound\static\Comprobante Modelo.xlsx")
+                modelo = pd.read_excel("/webapps/project/proyectoantioquia/static/Comprobante Modelo.xlsx")
                 modelo["Identificación tercero"] = j["CC Acudiente"] 
                 modelo["Tipo de comprobante"] = 1
                 modelo["Consecutivo comprobante"] = comprobante
@@ -578,7 +578,7 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
         for j in lista_datos:
 
             print("Consecutivo Nro: " + str(comprobante))
-            modelo = pd.read_excel(r"C:\Users\darwi\Desktop\unbound\static\Comprobante Modelo.xlsx")
+            modelo = pd.read_excel("/webapps/project/proyectoantioquia/static/Comprobante Modelo.xlsx")
             modelo["Identificación tercero"] = j["CC Acudiente"] 
             modelo["Tipo de comprobante"] = 1
             modelo["Consecutivo comprobante"] = comprobante
@@ -665,7 +665,7 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
             for j in lista_datos:
 
                 print("Consecutivo Nro: " + str(comprobante))
-                modelo = pd.read_excel(r"C:\Users\darwi\Desktop\unbound\static\Comprobante Modelo.xlsx")
+                modelo = pd.read_excel("/webapps/project/proyectoantioquia/static/Comprobante Modelo.xlsx")
                 modelo["Identificación tercero"] = j["CC Acudiente"] 
                 modelo["Tipo de comprobante"] = 1
                 modelo["Consecutivo comprobante"] = comprobante
@@ -752,7 +752,7 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
             for j in lista_datos:
 
                 print("Consecutivo Nro: " + str(comprobante))
-                modelo = pd.read_excel(r"C:\Users\darwi\Desktop\unbound\static\Comprobante Modelo.xlsx")
+                modelo = pd.read_excel("/webapps/project/proyectoantioquia/static/Comprobante Modelo.xlsx")
                 modelo["Identificación tercero"] = j["CC Acudiente"] 
                 modelo["Tipo de comprobante"] = 1
                 modelo["Consecutivo comprobante"] = comprobante

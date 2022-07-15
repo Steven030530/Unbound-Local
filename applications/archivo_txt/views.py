@@ -35,7 +35,7 @@ def upload(request):
              
              
         except Exception as e:
-            context.update({'error':'error'})
+            context.update({'error': e})
             print(repr(e))
     
     return render(request,"archivo_txt/upload.html",context)
@@ -56,7 +56,7 @@ def cuenta_28(request):
              context['url'] = fs.url(name)
              
         except Exception as e:
-            context.update({'error':'error'})
+            context.update({'error': e})
             print(repr(e))
   
     return render(request,"archivo_txt/ingreso_28.html",context)
@@ -77,7 +77,7 @@ def cuenta_41(request):
              context['url'] = fs.url(name)
              
         except Exception as e:
-            context.update({'error':'error'})
+            context.update({'error': e})
             print(repr(e))
         
     return render(request,"archivo_txt/ingreso_41.html",context)
@@ -99,7 +99,7 @@ def egreso_siigo(request):
              context['url'] = fs.url(name)
              
         except Exception as e:
-            context.update({'error':'error'})
+            context.update({'error': e})
             print(repr(e))
         
     return render(request,"archivo_txt/egreso_siigo.html",context)
@@ -126,13 +126,13 @@ def ingreso_abila(request):
                 
                 
             except Exception as e:
-                context.update({'error':'error'})
+                context.update({'error': e})
                 print(repr(e))
         try:
             Consolidar.consolidacion_archivos("INGRESO")
             context['url'] = fs.url(name)
         except Exception as e:
-            context.update({'error':'error'})
+            context.update({'error': e})
             print(repr(e))
 
     return render(request,"archivo_txt/ingreso_abila.html",context)
@@ -163,12 +163,12 @@ def egreso_abila(request):
                 
                 
             except Exception as e:
-                context.update({'error':'error'})
+                context.update({'error': e})
                 print(repr(e))
         try:
             Consolidar.consolidacion_archivos("EGRESO")
             context['url'] = fs.url(name)
         except Exception as e:
-            context.update({'error':'error'})
+            context.update({'error': e})
             print(repr(e))
     return render(request,"archivo_txt/egreso_abila.html",context)
