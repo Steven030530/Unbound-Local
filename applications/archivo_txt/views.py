@@ -35,12 +35,12 @@ class ReporteExcel(TemplateView):
         response = HttpResponse(content_type='application/vnd.ms-excel')
         contenido = 'attachment;filename = {0}'.format(nombre_archivo)
         response["Content-Disposition"] = contenido 
-        print(fs.listdir(r"C:\Users\darwi\Desktop\proyectounbound\media")[1])
-        print(len(fs.listdir(r"C:\Users\darwi\Desktop\proyectounbound\media")[1]))
-        print(fs.path(fs.listdir(r"C:\Users\darwi\Desktop\proyectounbound\media")[1][0]))
-        wb = load_workbook(str(fs.path(fs.listdir(r"C:\Users\darwi\Desktop\proyectounbound\media")[1][0])))
+        print(fs.listdir("/webapps/project/proyectounbound/media/")[1])
+        print(len(fs.listdir("/webapps/project/proyectounbound/media/")[1]))
+        print(fs.path(fs.listdir("/webapps/project/proyectounbound/media/")[1][0]))
+        wb = load_workbook(str(fs.path(fs.listdir("/webapps/project/proyectounbound/media/")[1][0])))
         wb.save(response)
-        fs.delete(fs.path(fs.listdir(r"C:\Users\darwi\Desktop\proyectounbound\media")[1][0]))
+        fs.delete(fs.path(fs.listdir("/webapps/project/proyectounbound/media/")[1][0]))
         return response
         
         
@@ -56,7 +56,7 @@ def upload(request):
         uploaded_emp = request.POST["empresa"]
         fs = FileSystemStorage()
         name = fs.save(uploaded_file.name,uploaded_file)
-        fs.delete(fs.path(fs.listdir(r"C:\Users\darwi\Desktop\proyectounbound\media")[1][0]))
+        fs.delete(fs.path(fs.listdir("/webapps/project/proyectounbound/media/")[1][0]))
         
         try:
              archivo=archivo_txt(uploaded_file,uploaded_date,uploaded_emp)
