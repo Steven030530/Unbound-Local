@@ -1,4 +1,4 @@
-def archivo_txt(name,fecha):
+def archivo_txt(name,fecha,empresa):
 
     from django.shortcuts import render
     from requests import request
@@ -14,126 +14,129 @@ def archivo_txt(name,fecha):
     
     nombre_archivo = name
     fecha = fecha
+    empresa = empresa
     hojas = pd.read_excel(nombre_archivo,sheet_name=None)
     lista_sheets = list(hojas.keys())
     lista_sheets.remove("LISTAS")
     lista_archivos = []
 
-    for i in lista_sheets:
+    if empresa == "Efecty":
+        for i in lista_sheets:
 
-        data = pd.read_excel(nombre_archivo,sheet_name=i)
+            data = pd.read_excel(nombre_archivo,sheet_name=i)
 
 
 
-    # ORGANIZAMOS EL ARCHIVO DE LOS DATOS PARA EXTRAER LOS VALORES QUE EFECTIVAMENTE SE ENTREGARON Y QUE SEAN DE EFECTY, ADEMAS CREAMOS UN VALOR
-    # GENERALIZADO DE LOS VALORES RECIBIDOS POR LOS ACUDIENTES POR CADA UNO DE LOS FONDOS
-    #ok = data["Estado de Entrega"] == "OKA"
-        efecty = data["Tipo Entrega Aporte"] == "Efecty"
-        data_ok = data[efecty]
-        data_ok["Valor Dispersion"] = data_ok["Aporte Mes Actual"] + data_ok["Cumpleaños"] + data_ok["Regalo Especial"] + data_ok["Solicita"]
-        #LLENAMOS ESPACIOS VACIOS CON ESPACIO
-        data_ok["Otros Nombre/s Acudiente"].fillna(value=" ",inplace=True)
+        # ORGANIZAMOS EL ARCHIVO DE LOS DATOS PARA EXTRAER LOS VALORES QUE EFECTIVAMENTE SE ENTREGARON Y QUE SEAN DE EFECTY, ADEMAS CREAMOS UN VALOR
+        # GENERALIZADO DE LOS VALORES RECIBIDOS POR LOS ACUDIENTES POR CADA UNO DE LOS FONDOS
+        #ok = data["Estado de Entrega"] == "OKA"
+            efecty = data["Tipo Entrega Aporte"] == "Efecty"
+            data_ok = data[efecty]
+            data_ok["Valor Dispersion"] = data_ok["Aporte Mes Actual"] + data_ok["Cumpleaños"] + data_ok["Regalo Especial"] + data_ok["Solicita"]
+            #LLENAMOS ESPACIOS VACIOS CON ESPACIO
+            data_ok["Otros Nombre/s Acudiente"].fillna(value=" ",inplace=True)
+            
+
+        # CREAMOS UN DATAFRAME CON LOS REQUERIMIENTOS ESTABLECIDOS POR EFECTY 
+
+            efecty = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante TXT Efecty.xlsx")
+
+            efecty["Documento"] = data_ok["CC Acudiente"]
+            efecty["co"] = '"'
+            efecty["02"] = "02"
+            efecty["cpc"] = '"|"'
+            efecty["cpc1"] = '"|"'
+            efecty["Tipo Documento"] = data_ok["Tipo de Documento"]
+            efecty["cp"] = '"|'
+            efecty.drop_duplicates(["Documento"],inplace=True,keep="last")
+            efecty["Valor"] = data_ok.groupby("CC Acudiente").cumsum()[["Valor Dispersion"]]
+            efecty["p"] = "|"
+            efecty["Fecha y Hora"] = fecha + " 00:00:00"
+            efecty["pc"] = '|"'
+            efecty["Nombres"] = data_ok["Primer nombre Acudiente"] + " " + data_ok["Otros Nombre/s Acudiente"]
+            efecty["cpc2"] = '"|"'
+            efecty["Apellido1"] = data_ok["Primer apellido Acudiente"]
+            efecty["cpc3"] = '"|"'
+            efecty["Apellido2"] = data_ok["Segundo apellido Acudiente"]
+            efecty["cpc4"] = '"|"'
+            efecty["Telefono"] = data_ok["Telefono de Contacto"]
+            efecty["cpc5"] = '"|"'
+            efecty["Comentarios"] = data_ok["SUBP"]
+            efecty["cpc6"] = '"|"'
+            efecty["Codigo PS"] = "060410"
+            efecty["cpc7"] = '"|"'
+            efecty["PIN"] = "N.A"
+            efecty["co1"] = '"'
+            
+        # CAMBIAMOS EL TIPO DE DOCUMENTO POR EL REQUERIDO POR EFECTY ADEMAS CAMBIAMOS LOS CAMPOS VACIOS EN EL APELLIDO POR NO APLICA
+            efecty.replace(to_replace="Cedula de Ciudadania",value="CC",inplace=True,regex=True)
+            efecty.replace(to_replace="Cedula Venezolana",value="CV",inplace=True,regex=True)
+            efecty.replace(to_replace="Cedula Extranjeria",value="CE",inplace=True,regex=True)
+            efecty["Apellido2"].replace(to_replace= np.nan ,value="N/A",inplace=True)
+            
+        # GENERAMOS EL ARCHIVO DE EXCEL PARA SUBIR A LA PLATAFORMA DE EFECTY
+            lista_archivos.append(efecty)  
         
-
-    # CREAMOS UN DATAFRAME CON LOS REQUERIMIENTOS ESTABLECIDOS POR EFECTY 
-
-        efecty = pd.read_excel("/webapps/project/proyectounbound/static/Modelo TXT Efecty.xlsx")
-
-        efecty["Documento"] = data_ok["CC Acudiente"]
-        efecty["co"] = '"'
-        efecty["02"] = "02"
-        efecty["cpc"] = '"|"'
-        efecty["cpc1"] = '"|"'
-        efecty["Tipo Documento"] = data_ok["Tipo de Documento"]
-        efecty["cp"] = '"|'
-        efecty.drop_duplicates(["Documento"],inplace=True,keep="last")
-        efecty["Valor"] = data_ok.groupby("CC Acudiente").cumsum()[["Valor Dispersion"]]
-        efecty["p"] = "|"
-        efecty["Fecha y Hora"] = fecha + " 00:00:00"
-        efecty["pc"] = '|"'
-        efecty["Nombres"] = data_ok["Primer nombre Acudiente"] + " " + data_ok["Otros Nombre/s Acudiente"]
-        efecty["cpc2"] = '"|"'
-        efecty["Apellido1"] = data_ok["Primer apellido Acudiente"]
-        efecty["cpc3"] = '"|"'
-        efecty["Apellido2"] = data_ok["Segundo apellido Acudiente"]
-        efecty["cpc4"] = '"|"'
-        efecty["Telefono"] = data_ok["Telefono de Contacto"]
-        efecty["cpc5"] = '"|"'
-        efecty["Comentarios"] = data_ok["SUBP"]
-        efecty["cpc6"] = '"|"'
-        efecty["Codigo PS"] = "060410"
-        efecty["cpc7"] = '"|"'
-        efecty["PIN"] = "N.A"
-        efecty["co1"] = '"'
-        
-    # CAMBIAMOS EL TIPO DE DOCUMENTO POR EL REQUERIDO POR EFECTY ADEMAS CAMBIAMOS LOS CAMPOS VACIOS EN EL APELLIDO POR NO APLICA
-        efecty.replace(to_replace="Cedula de Ciudadania",value="CC",inplace=True,regex=True)
-        efecty.replace(to_replace="Cedula Venezolana",value="CV",inplace=True,regex=True)
-        efecty.replace(to_replace="Cedula Extranjeria",value="CE",inplace=True,regex=True)
-        efecty["Apellido2"].replace(to_replace= np.nan ,value="N/A",inplace=True)
-        
-    # GENERAMOS EL ARCHIVO DE EXCEL PARA SUBIR A LA PLATAFORMA DE EFECTY
-        lista_archivos.append(efecty)  
+        consol = pd.concat(lista_archivos)
+        consol.to_excel("/webapps/project/proyectounbound/media/EfectyTXTConsolidado.xlsx",index=False)
     
-    consol = pd.concat(lista_archivos)
-    consol.to_excel("archivos_txt\EfectyTXTConsolidado.xlsx",index=False)
-
     ################################## BANCOLOMBIA  ##########################################################################
 
 # ORGANIZAMOS EL ARCHIVO DE LOS DATOS PARA EXTRAER LOS VALORES QUE EFECTIVAMENTE SE ENTREGARON Y QUE SEAN DE BANCOLOMBIA, ADEMAS CREAMOS UN VALOR
 # GENERALIZADO DE LOS VALORES RECIBIDOS POR LOS ACUDIENTES POR CADA UNO DE LOS FONDOS, LIMPIAMOS LOS DATOS Y ADEMAS UNIFICAMOS LOS NOMBRES Y APELLIDOS DEL ACUDIENTE
-    lista_archivos_banco = []
-    for i in lista_sheets:
-        dato = pd.read_excel(nombre_archivo,sheet_name=i)
-        #ok = dato["Estado de Entrega"] == "OKA"
-        bancolombia = dato["Tipo Entrega Aporte"] == "Cuenta Bancaria"
-        dato_ok = dato[bancolombia]
-        dato_ok["Valor Dispercion"] = dato_ok["Aporte Mes Actual"] + dato_ok["Cumpleaños"] + dato_ok["Regalo Especial"] + dato_ok["Solicita"]
-        dato_ok["Otros Nombre/s Acudiente"].fillna(value=" ",inplace=True)
-        dato_ok["Segundo apellido Acudiente"].fillna(value=" ",inplace=True)
-        dato_ok["Nombre Del Acudiente (nombres - apellidos)"] = dato_ok["Primer nombre Acudiente"] + " " + dato_ok["Otros Nombre/s Acudiente"] + " " + dato_ok["Primer apellido Acudiente"] + " " + dato_ok["Segundo apellido Acudiente"]
-        dato_ok.reset_index(inplace=True)
-        
-        
-    # ESTABLECEMOS EL LIMITE DEL NOMBRE DEL ACUDIENTE A 30 CARACTERES
+    elif empresa == "Bancolombia":
+        lista_archivos_banco = []
+        for i in lista_sheets:
+            dato = pd.read_excel(nombre_archivo,sheet_name=i)
+            #ok = dato["Estado de Entrega"] == "OKA"
+            bancolombia = dato["Tipo Entrega Aporte"] == "Cuenta Bancaria"
+            dato_ok = dato[bancolombia]
+            dato_ok["Valor Dispercion"] = dato_ok["Aporte Mes Actual"] + dato_ok["Cumpleaños"] + dato_ok["Regalo Especial"] + dato_ok["Solicita"]
+            dato_ok["Otros Nombre/s Acudiente"].fillna(value=" ",inplace=True)
+            dato_ok["Segundo apellido Acudiente"].fillna(value=" ",inplace=True)
+            dato_ok["Nombre Del Acudiente (nombres - apellidos)"] = dato_ok["Primer nombre Acudiente"] + " " + dato_ok["Otros Nombre/s Acudiente"] + " " + dato_ok["Primer apellido Acudiente"] + " " + dato_ok["Segundo apellido Acudiente"]
+            dato_ok.reset_index(inplace=True)
+            
+            
+        # ESTABLECEMOS EL LIMITE DEL NOMBRE DEL ACUDIENTE A 30 CARACTERES
 
-        for j in range(len(dato_ok["Nombre Del Acudiente (nombres - apellidos)"])):
-            if len(dato_ok["Nombre Del Acudiente (nombres - apellidos)"][j])>=30:
-                dato_ok["Nombre Del Acudiente (nombres - apellidos)"][j] = dato_ok["Nombre Del Acudiente (nombres - apellidos)"][j][0:30]
-            else:
-                dato_ok["Nombre Del Acudiente (nombres - apellidos)"][j]
-                
-    # CREAMOS UN NUEVO DATAFRAME CON LOS REQUERIMIENTO QUE EXIGE LA PLATAFORMA DE BANCOLOMBIA PARA SUBIR LOS DATOS DE PAGO
-        nueva_tabla = pd.DataFrame()
-        nueva_tabla["Tipo de Documento"] = dato_ok["Tipo de Documento"]
-        nueva_tabla["Identificacion"] = dato_ok["CC Acudiente"]
-        nueva_tabla["Nombre"] = dato_ok["Nombre Del Acudiente (nombres - apellidos)"]
-        nueva_tabla["Tipo de Transaccion"] = 37
-        nueva_tabla["Codigo Bancolombia"] = 1007
-        nueva_tabla["Numero de la Cuenta"] = dato_ok["Numero Cuenta Bancaria"]
-        nueva_tabla["Email"] = " "
-        nueva_tabla["Documento"] = " "
-        nueva_tabla["Referencia"] = dato_ok["SUBP"]
-        nueva_tabla.drop_duplicates(["Identificacion"],inplace=True,keep="last")
-        nueva_tabla["Oficina de entrega"] = " "
-        #nueva_tabla["Tipo de Documento"] = 1
-        nueva_tabla["Valor Transacciones"] = dato_ok.groupby("CC Acudiente").cumsum()[["Valor Dispercion"]]
-        nueva_tabla.replace(to_replace="ñ",value="n",inplace=True,regex=True)
-        nueva_tabla.replace(to_replace="á",value="a",inplace=True,regex=True)
-        nueva_tabla.replace(to_replace="é",value="e",inplace=True,regex=True)
-        nueva_tabla.replace(to_replace="í",value="i",inplace=True,regex=True)
-        nueva_tabla.replace(to_replace="ó",value="o",inplace=True,regex=True)
-        nueva_tabla.replace(to_replace="ú",value="u",inplace=True,regex=True)
-        
-    # CAMBIAMOS EL TIPO DE DOCUMENTO POR EL REQUERIDO POR EFECTY ADEMAS CAMBIAMOS LOS CAMPOS VACIOS EN EL APELLIDO POR NO APLICA
-        nueva_tabla.replace(to_replace="Cedula de Ciudadania",value="1",inplace=True,regex=True)
-        nueva_tabla.replace(to_replace="Pasaporte",value="5",inplace=True,regex=True)
-        nueva_tabla.replace(to_replace="Cedula Extranjeria",value="2",inplace=True,regex=True)
-        
-    # GEBERAMOS EL ARCHIVO EXCEL PARA SUBIR A LA PLATAFORMA DE BANCOLOMBIA   
-        lista_archivos_banco.append(nueva_tabla)
-    consolban = pd.concat(lista_archivos_banco)
-    consolban.to_excel("archivos_txt\BancolombiaTXTConsolidado.xlsx",index=False)
+            for j in range(len(dato_ok["Nombre Del Acudiente (nombres - apellidos)"])):
+                if len(dato_ok["Nombre Del Acudiente (nombres - apellidos)"][j])>=30:
+                    dato_ok["Nombre Del Acudiente (nombres - apellidos)"][j] = dato_ok["Nombre Del Acudiente (nombres - apellidos)"][j][0:30]
+                else:
+                    dato_ok["Nombre Del Acudiente (nombres - apellidos)"][j]
+                    
+        # CREAMOS UN NUEVO DATAFRAME CON LOS REQUERIMIENTO QUE EXIGE LA PLATAFORMA DE BANCOLOMBIA PARA SUBIR LOS DATOS DE PAGO
+            nueva_tabla = pd.DataFrame()
+            nueva_tabla["Tipo de Documento"] = dato_ok["Tipo de Documento"]
+            nueva_tabla["Identificacion"] = dato_ok["CC Acudiente"]
+            nueva_tabla["Nombre"] = dato_ok["Nombre Del Acudiente (nombres - apellidos)"]
+            nueva_tabla["Tipo de Transaccion"] = 37
+            nueva_tabla["Codigo Bancolombia"] = 1007
+            nueva_tabla["Numero de la Cuenta"] = dato_ok["Numero Cuenta Bancaria"]
+            nueva_tabla["Email"] = " "
+            nueva_tabla["Documento"] = " "
+            nueva_tabla["Referencia"] = dato_ok["SUBP"]
+            nueva_tabla.drop_duplicates(["Identificacion"],inplace=True,keep="last")
+            nueva_tabla["Oficina de entrega"] = " "
+            #nueva_tabla["Tipo de Documento"] = 1
+            nueva_tabla["Valor Transacciones"] = dato_ok.groupby("CC Acudiente").cumsum()[["Valor Dispercion"]]
+            nueva_tabla.replace(to_replace="ñ",value="n",inplace=True,regex=True)
+            nueva_tabla.replace(to_replace="á",value="a",inplace=True,regex=True)
+            nueva_tabla.replace(to_replace="é",value="e",inplace=True,regex=True)
+            nueva_tabla.replace(to_replace="í",value="i",inplace=True,regex=True)
+            nueva_tabla.replace(to_replace="ó",value="o",inplace=True,regex=True)
+            nueva_tabla.replace(to_replace="ú",value="u",inplace=True,regex=True)
+            
+        # CAMBIAMOS EL TIPO DE DOCUMENTO POR EL REQUERIDO POR EFECTY ADEMAS CAMBIAMOS LOS CAMPOS VACIOS EN EL APELLIDO POR NO APLICA
+            nueva_tabla.replace(to_replace="Cedula de Ciudadania",value="1",inplace=True,regex=True)
+            nueva_tabla.replace(to_replace="Pasaporte",value="5",inplace=True,regex=True)
+            nueva_tabla.replace(to_replace="Cedula Extranjeria",value="2",inplace=True,regex=True)
+            
+        # GEBERAMOS EL ARCHIVO EXCEL PARA SUBIR A LA PLATAFORMA DE BANCOLOMBIA   
+            lista_archivos_banco.append(nueva_tabla)
+        consolban = pd.concat(lista_archivos_banco)
+        consolban.to_excel("/webapps/project/proyectounbound/media/BancolombiaTXTConsolidado.xlsx",index=False)
 
 ###########################################################################################################################################################
 
@@ -231,7 +234,7 @@ def ingreso_41(name,date,consecutivo):
     # EXPORTAMOS EL ARCHIVO DE EXCEL PARA IMPORTAR EN SIIGO
         
     modelo.drop(modelo.loc[modelo['Crédito']==0].index, inplace=True) 
-    modelo.to_excel("Ingreso Cuenta 41" + ".xlsx",index=False)
+    modelo.to_excel("/webapps/project/proyectounbound/media/Ingreso Cuenta 41" + ".xlsx",index=False)
 
 #####################################################################################################################################################################
 
@@ -317,7 +320,7 @@ def ingreso_28(name,date,consecutivo):
             numero_egreso = 1
             
             for y in lista_datos:
-                aporte_general = pd.read_excel("/webapps/project/proyectounbound/static/Modelo TXT Efecty.xlsx")
+                aporte_general = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
                 aporte_general["Código centro/subcentro de costos"] = y["SUBP"]
                 if k == "V":
                     aporte_general["Código cuenta contable"] = 28150520
@@ -333,7 +336,7 @@ def ingreso_28(name,date,consecutivo):
                 banco = [11,aporte_general["Consecutivo comprobante"][1], aporte_general["Fecha de elaboración "][1],"","",11100511,890903938,"","","","","","","","","","","","",aporte_general["Descripción"][1],"000100-1",sum(aporte_general["Crédito"]),"","","","",""]
                 aporte_general.loc[len(aporte_general.index)] = banco
                 consecutivo = consecutivo + 1
-                aporte_general.to_excel("INGRESO GENERAL AP " + hoja_actual  + str(numero_egreso) + ".xlsx",index=False)
+                aporte_general.to_excel("/webapps/project/proyectounbound/media/INGRESO GENERAL AP " + hoja_actual  + str(numero_egreso) + ".xlsx",index=False)
                 numero_egreso = numero_egreso + 1
                 print("No Consecutivo: " + str(consecutivo))
 
@@ -354,14 +357,14 @@ def ingreso_28(name,date,consecutivo):
 
             consecutivo = consecutivo + 1
             numero_egreso_cumple = 1
-            aporte_cumple.to_excel("INGRESO GENERAL CUMPLEAÑOS " + hoja_actual + str(numero_egreso_cumple) + ".xlsx",index=False)
+            aporte_cumple.to_excel("/webapps/project/proyectounbound/media/INGRESO GENERAL CUMPLEAÑOS " + hoja_actual + str(numero_egreso_cumple) + ".xlsx",index=False)
             print("No Consecutivo: " + str(consecutivo))
 
 
 
             # APORTE REGALOS ESPECIALES              
 
-            aporte_regalo = pd.read_excel("/webapps/project/proyectounbound/static/Modelo TXT Efecty.xlsx")
+            aporte_regalo = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
             aporte_regalo["Código centro/subcentro de costos"] = datos["SUBP"]
             aporte_regalo["Código cuenta contable"] = 28150510
             aporte_regalo["Consecutivo comprobante"] = consecutivo
@@ -376,7 +379,7 @@ def ingreso_28(name,date,consecutivo):
             
             
             numero_egreso_re = 1
-            aporte_regalo.to_excel("INGRESO GENERAL REGALO ESPECIAL " + hoja_actual + str(numero_egreso_re) + ".xlsx",index=False)
+            aporte_regalo.to_excel("/webapps/project/proyectounbound/media/INGRESO GENERAL REGALO ESPECIAL " + hoja_actual + str(numero_egreso_re) + ".xlsx",index=False)
             print("No Consecutivo: " + str(consecutivo))
                     
 ###################################################################################################################################################################################################################################################################################################
@@ -471,7 +474,7 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
             for j in lista_datos:
 
                 print("Consecutivo Nro: " + str(comprobante))
-                modelo = pd.read_excel("/webapps/project/proyectounbound/static/Modelo TXT Efecty.xlsx")
+                modelo = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
                 modelo["Identificación tercero"] = j["CC Acudiente"] 
                 modelo["Tipo de comprobante"] = 1
                 modelo["Consecutivo comprobante"] = comprobante
@@ -509,9 +512,9 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
 
                 modelo.drop(modelo.loc[modelo['Débito']==0].index, inplace=True)
                 if entrega == "Cuenta Bancaria":
-                    modelo.to_excel("APORTE APADRINAMIENTO BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                    modelo.to_excel("/webapps/project/proyectounbound/media/APORTE APADRINAMIENTO BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
                 elif entrega == "Efecty":
-                    modelo.to_excel("APORTE APADRINAMIENTO EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                    modelo.to_excel("/webapps/project/proyectounbound/media/APORTE APADRINAMIENTO EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
                 numero_para_guardar_egreso = numero_para_guardar_egreso + 1
 
 
@@ -578,7 +581,7 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
         for j in lista_datos:
 
             print("Consecutivo Nro: " + str(comprobante))
-            modelo = pd.read_excel("/webapps/project/proyectounbound/static/Modelo TXT Efecty.xlsx")
+            modelo = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
             modelo["Identificación tercero"] = j["CC Acudiente"] 
             modelo["Tipo de comprobante"] = 1
             modelo["Consecutivo comprobante"] = comprobante
@@ -598,9 +601,9 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
 
             modelo.drop(modelo.loc[modelo['Débito']==0].index, inplace=True)
             if entrega == "Cuenta Bancaria": 
-                modelo.to_excel("APORTE CUMPLEAÑOS BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                modelo.to_excel("/webapps/project/proyectounbound/media/APORTE CUMPLEAÑOS BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
             elif entrega == "Efecty":
-                modelo.to_excel("APORTE CUMPLEAÑOS EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                modelo.to_excel("/webapps/project/proyectounbound/media/APORTE CUMPLEAÑOS EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
             numero_para_guardar_egreso = numero_para_guardar_egreso + 1
 
         ################################### REGALOS ESPECIALES ##################################################################
@@ -665,7 +668,7 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
             for j in lista_datos:
 
                 print("Consecutivo Nro: " + str(comprobante))
-                modelo = pd.read_excel("/webapps/project/proyectounbound/static/Modelo TXT Efecty.xlsx")
+                modelo = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
                 modelo["Identificación tercero"] = j["CC Acudiente"] 
                 modelo["Tipo de comprobante"] = 1
                 modelo["Consecutivo comprobante"] = comprobante
@@ -685,9 +688,9 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
 
                 modelo.drop(modelo.loc[modelo['Débito']==0].index, inplace=True)
                 if entrega == "Cuenta Bancaria":
-                    modelo.to_excel("APORTE REGALO ESPECIAL BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                    modelo.to_excel("/webapps/project/proyectounbound/media/APORTE REGALO ESPECIAL BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
                 elif entrega == "Efecty":
-                    modelo.to_excel("APORTE REGALO ESPECIAL EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                    modelo.to_excel("/webapps/project/proyectounbound/media/APORTE REGALO ESPECIAL EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
                 numero_para_guardar_egreso = numero_para_guardar_egreso + 1
     
         ############################################# APORTES OTROS MESES ##########################################################################
@@ -752,7 +755,7 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
             for j in lista_datos:
 
                 print("Consecutivo Nro: " + str(comprobante))
-                modelo = pd.read_excel("/webapps/project/proyectounbound/static/Modelo TXT Efecty.xlsx")
+                modelo = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
                 modelo["Identificación tercero"] = j["CC Acudiente"] 
                 modelo["Tipo de comprobante"] = 1
                 modelo["Consecutivo comprobante"] = comprobante
@@ -774,9 +777,9 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
 
                 modelo.drop(modelo.loc[modelo['Débito']==0].index, inplace=True) 
                 if entrega == "Cuenta Bancaria":
-                    modelo.to_excel("APORTE MESES ANTERIORES BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                    modelo.to_excel("/webapps/project/proyectounbound/media/APORTE MESES ANTERIORES BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
                 elif entrega == "Efecty":
-                    modelo.to_excel("APORTE MESES ANTERIORES EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                    modelo.to_excel("/webapps/project/proyectounbound/media/APORTE MESES ANTERIORES EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
                 numero_para_guardar_egreso = numero_para_guardar_egreso + 1
 
 

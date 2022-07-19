@@ -19,7 +19,7 @@
 body{
     background: linear-gradient(to top left ,rgb(86, 86, 225),white);
     background-repeat: no-repeat;
-    height: 100vh;
+    height: 110vh;
 }
 
 img{
@@ -76,9 +76,28 @@ a{
     text-decoration: none;
 }
 
+.download{
+  text-decoration: none;
+  font-size: 20px;
+}
+
+.excel{
+  width: 60px;
+  height: 60px;
+  top: 50px;
+  animation: escalar 3s;
+}
+
 .btn-enviar:hover {
     background-color: greenyellow;
 }
+
+.container-download{
+  position: absolute;
+  right: 150px;
+  top: 650px;
+}
+
 
 
 
@@ -108,7 +127,9 @@ footer{
     width: 50%;
 }
 
-
+select{
+  font-size: 20px;
+}
 
   svg{
     position: absolute;

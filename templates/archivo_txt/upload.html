@@ -223,7 +223,15 @@
     </g>
 
         </svg>
-        {% endif %}            
+
+        <div class="container-download">
+            <h3>Descarga Archivo</h3>
+            <a class = "download" href="{% url 'unbound_app:reporte' %}"><img class="excel" src="/static/images/excel.png" alt="excel"></a>
+        </div>
+
+        {% endif %}
+        
+       
         
             
         {% ifnotequal error var1  %} 
@@ -237,11 +245,12 @@
                 </g>
             </svg>
             {{error}}
+            
         {% endifnotequal %}
                 
 
         <img src="/static/images/image-generator.svg" alt="generator-img">
-
+        
         
             
             {% if url %}
@@ -253,7 +262,13 @@
             {% endifnotequal %}
                
            
-        <form method="post" enctype="multipart/form-data">{% csrf_token %} 
+        <form method="post" enctype="multipart/form-data">{% csrf_token %}
+            <h3>Seleccione el Tipo de Entrega</h3>
+            <select name="empresa" id="">
+                <option value="Bancolombia">Bancolombia</option>
+                <option value="Efecty">Efecty</option>
+            </select>
+            
             <h3>Cargar Archivo Dispersion Unificada</h3>
             <input type="file" class="carga" name="ArchivoTxt" required>
             <h3>Seleccionar Fecha</h3>
