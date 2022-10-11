@@ -1,3 +1,4 @@
+
 def archivo_txt(name,fecha,empresa):
 
     from django.shortcuts import render
@@ -20,6 +21,7 @@ def archivo_txt(name,fecha,empresa):
     lista_sheets.remove("LISTAS")
     lista_archivos = []
 
+
     if empresa == "Efecty":
         for i in lista_sheets:
 
@@ -30,16 +32,19 @@ def archivo_txt(name,fecha,empresa):
         # ORGANIZAMOS EL ARCHIVO DE LOS DATOS PARA EXTRAER LOS VALORES QUE EFECTIVAMENTE SE ENTREGARON Y QUE SEAN DE EFECTY, ADEMAS CREAMOS UN VALOR
         # GENERALIZADO DE LOS VALORES RECIBIDOS POR LOS ACUDIENTES POR CADA UNO DE LOS FONDOS
         #ok = data["Estado de Entrega"] == "OKA"
+
             efecty = data["Tipo Entrega Aporte"] == "Efecty"
             data_ok = data[efecty]
-            data_ok["Valor Dispersion"] = data_ok["Aporte Mes Actual"] + data_ok["Cumpleaños"] + data_ok["Regalo Especial"] + data_ok["Solicita"]
+            data_ok["Valor Dispersion"] = data_ok["Aporte Mes Actual"] + data_ok["Cumpleaños"] + data_ok["Regalo Especial"] + data_ok["Solicita"] + data_ok["Navidad"] + data_ok["FNC"] + data_ok["Capital para un sueño"] + data_ok["FC"]
+            
             #LLENAMOS ESPACIOS VACIOS CON ESPACIO
+
             data_ok["Otros Nombre/s Acudiente"].fillna(value=" ",inplace=True)
             
 
         # CREAMOS UN DATAFRAME CON LOS REQUERIMIENTOS ESTABLECIDOS POR EFECTY 
 
-            efecty = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante TXT Efecty.xlsx")
+            efecty = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Modelo TXT Efecty.xlsx")
 
             efecty["Documento"] = data_ok["CC Acudiente"]
             efecty["co"] = '"'
@@ -59,7 +64,7 @@ def archivo_txt(name,fecha,empresa):
             efecty["cpc3"] = '"|"'
             efecty["Apellido2"] = data_ok["Segundo apellido Acudiente"]
             efecty["cpc4"] = '"|"'
-            efecty["Telefono"] = data_ok["Telefono de Contacto"]
+            efecty["Telefono"] = data_ok["Telefono de Contacto"]    
             efecty["cpc5"] = '"|"'
             efecty["Comentarios"] = data_ok["SUBP"]
             efecty["cpc6"] = '"|"'
@@ -76,9 +81,8 @@ def archivo_txt(name,fecha,empresa):
             
         # GENERAMOS EL ARCHIVO DE EXCEL PARA SUBIR A LA PLATAFORMA DE EFECTY
             lista_archivos.append(efecty)  
-        
         consol = pd.concat(lista_archivos)
-        consol.to_excel("/webapps/project/proyectounbound/media/EfectyTXTConsolidado.xlsx",index=False)
+        consol.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\EfectyTXTConsolidado.xlsx",index=False)
     
     ################################## BANCOLOMBIA  ##########################################################################
 
@@ -91,7 +95,7 @@ def archivo_txt(name,fecha,empresa):
             #ok = dato["Estado de Entrega"] == "OKA"
             bancolombia = dato["Tipo Entrega Aporte"] == "Cuenta Bancaria"
             dato_ok = dato[bancolombia]
-            dato_ok["Valor Dispercion"] = dato_ok["Aporte Mes Actual"] + dato_ok["Cumpleaños"] + dato_ok["Regalo Especial"] + dato_ok["Solicita"]
+            dato_ok["Valor Dispercion"] = dato_ok["Aporte Mes Actual"] + dato_ok["Cumpleaños"] + dato_ok["Regalo Especial"] + dato_ok["Solicita"] + dato_ok["Navidad"] + dato_ok["FNC"] + dato_ok["Capital para un sueño"] + dato_ok["FC"]
             dato_ok["Otros Nombre/s Acudiente"].fillna(value=" ",inplace=True)
             dato_ok["Segundo apellido Acudiente"].fillna(value=" ",inplace=True)
             dato_ok["Nombre Del Acudiente (nombres - apellidos)"] = dato_ok["Primer nombre Acudiente"] + " " + dato_ok["Otros Nombre/s Acudiente"] + " " + dato_ok["Primer apellido Acudiente"] + " " + dato_ok["Segundo apellido Acudiente"]
@@ -119,15 +123,15 @@ def archivo_txt(name,fecha,empresa):
             nueva_tabla["Referencia"] = dato_ok["SUBP"]
             nueva_tabla.drop_duplicates(["Identificacion"],inplace=True,keep="last")
             nueva_tabla["Oficina de entrega"] = " "
-            #nueva_tabla["Tipo de Documento"] = 1
             nueva_tabla["Valor Transacciones"] = dato_ok.groupby("CC Acudiente").cumsum()[["Valor Dispercion"]]
+            nueva_tabla["Fecha"] = fecha
             nueva_tabla.replace(to_replace="ñ",value="n",inplace=True,regex=True)
             nueva_tabla.replace(to_replace="á",value="a",inplace=True,regex=True)
             nueva_tabla.replace(to_replace="é",value="e",inplace=True,regex=True)
             nueva_tabla.replace(to_replace="í",value="i",inplace=True,regex=True)
             nueva_tabla.replace(to_replace="ó",value="o",inplace=True,regex=True)
             nueva_tabla.replace(to_replace="ú",value="u",inplace=True,regex=True)
-            
+            nueva_tabla["Fecha"].replace(to_replace="-",value="",inplace=True,regex=True)
         # CAMBIAMOS EL TIPO DE DOCUMENTO POR EL REQUERIDO POR EFECTY ADEMAS CAMBIAMOS LOS CAMPOS VACIOS EN EL APELLIDO POR NO APLICA
             nueva_tabla.replace(to_replace="Cedula de Ciudadania",value="1",inplace=True,regex=True)
             nueva_tabla.replace(to_replace="Pasaporte",value="5",inplace=True,regex=True)
@@ -136,7 +140,7 @@ def archivo_txt(name,fecha,empresa):
         # GEBERAMOS EL ARCHIVO EXCEL PARA SUBIR A LA PLATAFORMA DE BANCOLOMBIA   
             lista_archivos_banco.append(nueva_tabla)
         consolban = pd.concat(lista_archivos_banco)
-        consolban.to_excel("/webapps/project/proyectounbound/media/BancolombiaTXTConsolidado.xlsx",index=False)
+        consolban.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\BancolombiaTXTConsolidado.xlsx",index=False)
 
 ###########################################################################################################################################################
 
@@ -166,12 +170,12 @@ def ingreso_41(name,date,consecutivo):
     # ORGANIZAR TABLA DE CONSOLIDACION
 
     datos = pd.read_excel(nombre_archivo,sheet_name="Consolidacion",index_col="SUBPROYECTO")
-    consolidacion = datos[1:29]
+    consolidacion = datos[1:25]
     consolidacion.drop(columns=["Unnamed: 1"],inplace=True)
 
     # SEPARAMOS LOS VALORES QUE VAN AL INGRESO Y LOS QUE VAN AL PASIVO
 
-    ingreso = consolidacion.drop(index=["Refrigerios GU","Actividades Recreativas(Gimnasia)","Fomentando Capacidades"])
+    ingreso = consolidacion.drop(index=["Refrigerios y Materiales GU","Gala de Los Mejores","Refrigerios Navidad","Fomentando Capacidades"])
     pasivo = consolidacion.drop(index= ingreso.index )
 
     # CREAMOS UNA TABLA QUE CONTENGA LOS REGISTROS DEL INGRESO
@@ -180,6 +184,7 @@ def ingreso_41(name,date,consecutivo):
     tabla1["Cuenta_Contable"] = cuenta_ingreso
     tabla1.reset_index(drop=True,inplace=True)
 
+    print(tabla1)
 
     #CREAMOS UNA TABLA QUE CONTENGA LOS REGISTROS DEL PASIVO
     tabla2 = pd.DataFrame(pasivo.sum(),columns=["Valor"])
@@ -189,7 +194,7 @@ def ingreso_41(name,date,consecutivo):
 
     # REGISTRAMOS LOS VALORES EN EL ARCHIVO MODELO PARA LA IMPORTACION 
 
-    modelo = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
+    modelo = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Comprobante Modelo.xlsx")
     modelo["Código centro/subcentro de costos"] = tabla1["Subproyecto"]
     modelo["Código cuenta contable"] = cuenta_ingreso
     modelo["Consecutivo comprobante"] = consecutivo
@@ -234,7 +239,7 @@ def ingreso_41(name,date,consecutivo):
     # EXPORTAMOS EL ARCHIVO DE EXCEL PARA IMPORTAR EN SIIGO
         
     modelo.drop(modelo.loc[modelo['Crédito']==0].index, inplace=True) 
-    modelo.to_excel("/webapps/project/proyectounbound/media/Ingreso Cuenta 41" + ".xlsx",index=False)
+    modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\Ingreso Cuenta 41" + ".xlsx",index=False)
 
 #####################################################################################################################################################################
 
@@ -262,7 +267,6 @@ def ingreso_28(name,date,consecutivo):
     hojas = pd.read_excel(nombre_archivo,sheet_name=None)
     lista_sheets = list(hojas.keys())
     lista_sheets.remove("LISTAS")
-    lista_sheets.remove("FC")
 
     for k in lista_sheets:
 
@@ -316,11 +320,11 @@ def ingreso_28(name,date,consecutivo):
                 
             # APADRINAMIENTO GENERAL
 
-
+            
             numero_egreso = 1
             
             for y in lista_datos:
-                aporte_general = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
+                aporte_general = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Comprobante Modelo.xlsx")
                 aporte_general["Código centro/subcentro de costos"] = y["SUBP"]
                 if k == "V":
                     aporte_general["Código cuenta contable"] = 28150520
@@ -336,13 +340,14 @@ def ingreso_28(name,date,consecutivo):
                 banco = [11,aporte_general["Consecutivo comprobante"][1], aporte_general["Fecha de elaboración "][1],"","",11100511,890903938,"","","","","","","","","","","","",aporte_general["Descripción"][1],"000100-1",sum(aporte_general["Crédito"]),"","","","",""]
                 aporte_general.loc[len(aporte_general.index)] = banco
                 consecutivo = consecutivo + 1
-                aporte_general.to_excel("/webapps/project/proyectounbound/media/INGRESO GENERAL AP " + hoja_actual  + str(numero_egreso) + ".xlsx",index=False)
+                aporte_general.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\INGRESO GENERAL AP " + hoja_actual  + str(numero_egreso) + ".xlsx",index=False)
                 numero_egreso = numero_egreso + 1
                 print("No Consecutivo: " + str(consecutivo))
 
             # APORTE CUMPLEAÑOS
 
-            aporte_cumple = pd.read_excel("/webapps/project/proyectounbound/static/Modelo TXT Efecty.xlsx")
+            
+            aporte_cumple = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Comprobante Modelo.xlsx")
             aporte_cumple["Código centro/subcentro de costos"] = datos["SUBP"]
             aporte_cumple["Código cuenta contable"] = 28150530
             aporte_cumple["Consecutivo comprobante"] = consecutivo
@@ -357,14 +362,14 @@ def ingreso_28(name,date,consecutivo):
 
             consecutivo = consecutivo + 1
             numero_egreso_cumple = 1
-            aporte_cumple.to_excel("/webapps/project/proyectounbound/media/INGRESO GENERAL CUMPLEAÑOS " + hoja_actual + str(numero_egreso_cumple) + ".xlsx",index=False)
+            aporte_cumple.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\INGRESO GENERAL CUMPLEAÑOS " + hoja_actual + str(numero_egreso_cumple) + ".xlsx",index=False)
             print("No Consecutivo: " + str(consecutivo))
 
 
 
-            # APORTE REGALOS ESPECIALES              
+            # APORTE REGALOS ESPECIALES       
 
-            aporte_regalo = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
+            aporte_regalo = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Comprobante Modelo.xlsx")
             aporte_regalo["Código centro/subcentro de costos"] = datos["SUBP"]
             aporte_regalo["Código cuenta contable"] = 28150510
             aporte_regalo["Consecutivo comprobante"] = consecutivo
@@ -378,9 +383,10 @@ def ingreso_28(name,date,consecutivo):
             aporte_regalo = aporte_regalo[aporte_regalo["Crédito"] != 0]
             
             
+            consecutivo = consecutivo + 1    
             numero_egreso_re = 1
-            aporte_regalo.to_excel("/webapps/project/proyectounbound/media/INGRESO GENERAL REGALO ESPECIAL " + hoja_actual + str(numero_egreso_re) + ".xlsx",index=False)
-            print("No Consecutivo: " + str(consecutivo))
+            aporte_regalo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\INGRESO GENERAL REGALO ESPECIAL " + hoja_actual + str(numero_egreso_re) + ".xlsx",index=False)
+
                     
 ###################################################################################################################################################################################################################################################################################################
 
@@ -474,7 +480,7 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
             for j in lista_datos:
 
                 print("Consecutivo Nro: " + str(comprobante))
-                modelo = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
+                modelo = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Comprobante Modelo.xlsx")
                 modelo["Identificación tercero"] = j["CC Acudiente"] 
                 modelo["Tipo de comprobante"] = 1
                 modelo["Consecutivo comprobante"] = comprobante
@@ -512,9 +518,9 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
 
                 modelo.drop(modelo.loc[modelo['Débito']==0].index, inplace=True)
                 if entrega == "Cuenta Bancaria":
-                    modelo.to_excel("/webapps/project/proyectounbound/media/APORTE APADRINAMIENTO BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                    modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\APORTE APADRINAMIENTO BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
                 elif entrega == "Efecty":
-                    modelo.to_excel("/webapps/project/proyectounbound/media/APORTE APADRINAMIENTO EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                    modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\APORTE APADRINAMIENTO EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
                 numero_para_guardar_egreso = numero_para_guardar_egreso + 1
 
 
@@ -581,7 +587,7 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
         for j in lista_datos:
 
             print("Consecutivo Nro: " + str(comprobante))
-            modelo = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
+            modelo = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Comprobante Modelo.xlsx")
             modelo["Identificación tercero"] = j["CC Acudiente"] 
             modelo["Tipo de comprobante"] = 1
             modelo["Consecutivo comprobante"] = comprobante
@@ -590,8 +596,14 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
             modelo["Código cuenta contable"] = 28150530
             modelo["Código centro/subcentro de costos"] = j["SUBP"]
             modelo["Descripción"] = ("APORTE CUMPLEAÑOS " + month + " " + hoja_actual)
-            banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
-            modelo.loc[len(modelo.index)] = banco
+            if entrega == "Cuenta Bancaria":
+                    banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+                    modelo.loc[len(modelo.index)] = banco
+            elif entrega == "Efecty":
+                gasto = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",53051501,830131993,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1",sum(modelo["Débito"]*0.014),"","","","",""]
+                modelo.loc[len(modelo.index)] = gasto
+                banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+                modelo.loc[len(modelo.index)] = banco
 
         # le asignamos el siguiente valor al comprobante
 
@@ -601,9 +613,9 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
 
             modelo.drop(modelo.loc[modelo['Débito']==0].index, inplace=True)
             if entrega == "Cuenta Bancaria": 
-                modelo.to_excel("/webapps/project/proyectounbound/media/APORTE CUMPLEAÑOS BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\APORTE CUMPLEAÑOS BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
             elif entrega == "Efecty":
-                modelo.to_excel("/webapps/project/proyectounbound/media/APORTE CUMPLEAÑOS EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\APORTE CUMPLEAÑOS EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
             numero_para_guardar_egreso = numero_para_guardar_egreso + 1
 
         ################################### REGALOS ESPECIALES ##################################################################
@@ -668,7 +680,7 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
             for j in lista_datos:
 
                 print("Consecutivo Nro: " + str(comprobante))
-                modelo = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
+                modelo = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Comprobante Modelo.xlsx")
                 modelo["Identificación tercero"] = j["CC Acudiente"] 
                 modelo["Tipo de comprobante"] = 1
                 modelo["Consecutivo comprobante"] = comprobante
@@ -677,8 +689,14 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
                 modelo["Código cuenta contable"] = 28150510
                 modelo["Código centro/subcentro de costos"] = j["SUBP"]
                 modelo["Descripción"] = ("APORTE REGALO ESPECIAL " + month + " "  + hoja_actual)
-                banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
-                modelo.loc[len(modelo.index)] = banco           
+                if entrega == "Cuenta Bancaria":
+                    banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+                    modelo.loc[len(modelo.index)] = banco
+                elif entrega == "Efecty":
+                    gasto = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",53051501,830131993,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1",sum(modelo["Débito"]*0.014),"","","","",""]
+                    modelo.loc[len(modelo.index)] = gasto
+                    banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+                    modelo.loc[len(modelo.index)] = banco          
 
             # le asignamos el siguiente valor al comprobante
 
@@ -688,9 +706,9 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
 
                 modelo.drop(modelo.loc[modelo['Débito']==0].index, inplace=True)
                 if entrega == "Cuenta Bancaria":
-                    modelo.to_excel("/webapps/project/proyectounbound/media/APORTE REGALO ESPECIAL BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                    modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\APORTE REGALO ESPECIAL BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
                 elif entrega == "Efecty":
-                    modelo.to_excel("/webapps/project/proyectounbound/media/APORTE REGALO ESPECIAL EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                    modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\APORTE REGALO ESPECIAL EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
                 numero_para_guardar_egreso = numero_para_guardar_egreso + 1
     
         ############################################# APORTES OTROS MESES ##########################################################################
@@ -755,7 +773,7 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
             for j in lista_datos:
 
                 print("Consecutivo Nro: " + str(comprobante))
-                modelo = pd.read_excel("/webapps/project/proyectounbound/static/Comprobante Modelo.xlsx")
+                modelo = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Comprobante Modelo.xlsx")
                 modelo["Identificación tercero"] = j["CC Acudiente"] 
                 modelo["Tipo de comprobante"] = 1
                 modelo["Consecutivo comprobante"] = comprobante
@@ -764,8 +782,14 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
                 modelo["Código cuenta contable"] = 28150505
                 modelo["Código centro/subcentro de costos"] = j["SUBP"]
                 modelo["Descripción"] = ("APORTE MESES ANTERIORES " + month + " " +hoja_actual)
-                banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
-                modelo.loc[len(modelo.index)] = banco
+                if entrega == "Cuenta Bancaria":
+                    banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+                    modelo.loc[len(modelo.index)] = banco
+                elif entrega == "Efecty":
+                    gasto = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",53051501,830131993,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1",sum(modelo["Débito"]*0.014),"","","","",""]
+                    modelo.loc[len(modelo.index)] = gasto
+                    banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+                    modelo.loc[len(modelo.index)] = banco 
 
 
 
@@ -777,13 +801,397 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
 
                 modelo.drop(modelo.loc[modelo['Débito']==0].index, inplace=True) 
                 if entrega == "Cuenta Bancaria":
-                    modelo.to_excel("/webapps/project/proyectounbound/media/APORTE MESES ANTERIORES BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                    modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\APORTE MESES ANTERIORES BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
                 elif entrega == "Efecty":
-                    modelo.to_excel("/webapps/project/proyectounbound/media/APORTE MESES ANTERIORES EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                    modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\APORTE MESES ANTERIORES EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
                 numero_para_guardar_egreso = numero_para_guardar_egreso + 1
 
 
-                
+
+        ############################################# APORTES FONDO NECESIDADES CRITICAS ##########################################################################
+
+    for i in lista_sheets:    
+
+            # leemos el archivo con pandas
+            datos_p = pd.read_excel(nombre_archivo,sheet_name=i)
+            datos_p["SUBP"] = datos_p["SUBP"].str.strip()           
+
+            datos_ok = (datos_p["Estado de Entrega"] == "OKA") & (datos_p["Tipo Entrega Aporte"] == entrega)
+            datos = datos_p[datos_ok]
+            datos = datos[datos["FNC"] != 0]        
+
+
+            numero_para_guardar_egreso = 1
+
+            hoja_actual = i
+            print(i)
+
+            #" Subdividimos los archivos de a 500 Registros"
+            try:
+                lista_datos = FD.registros_500(datos)
+            except:
+                lista_datos = []
+            #"Organizamos los subproyectos para que sean leidos por el sistema siigo"
+
+            if hoja_actual != "AM":
+
+                for j in lista_datos:
+
+                    for i in range(len(j["SUBP"])):
+                        if len(j["SUBP"][i]) == 2:
+                            j["SUBP"][i] = "0000" + j["SUBP"][i] + "-1"
+                        elif len(j["SUBP"][i]) == 3 and j["SUBP"][i] == "MAI":
+                            j["SUBP"][i] = "00MAIN-1"
+                        elif len(j["SUBP"][i]) == 3 and j["SUBP"][i] == "MAE":
+                            j["SUBP"][i] = "00MAEN-1"
+                        else:
+                            j["SUBP"][i] = "000" + j["SUBP"][i] + "-1"
+
+            elif hoja_actual == "AM":
+
+                for j in lista_datos:
+
+                    for i in range(len(j["SUBP"])):
+
+                        if len(j["SUBP"][i]) == 2 and j["SUBP"][i] == "NJ":
+                            j["SUBP"][i] = "000NJA-1"
+                        elif len(j["SUBP"][i]) == 2:
+                            j["SUBP"][i] = "0000" + j["SUBP"][i] + "-1"
+                        elif len(j["SUBP"][i]) == 3 and j["SUBP"][i] == "MAI":
+                            j["SUBP"][i] = "00MAIA-1"
+                        elif len(j["SUBP"][i]) == 3 and j["SUBP"][i] == "MAE":
+                            j["SUBP"][i] = "00MAEA-1"
+                        else:
+                            j["SUBP"][i] = "000" + j["SUBP"][i] + "-1"
+
+
+            #"Alimentamos el archivo modelo para importar en contabilidad"     
+
+            for j in lista_datos:
+
+                print("Consecutivo Nro: " + str(comprobante))
+                modelo = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Comprobante Modelo.xlsx")
+                modelo["Identificación tercero"] = j["CC Acudiente"] 
+                modelo["Tipo de comprobante"] = 1
+                modelo["Consecutivo comprobante"] = comprobante
+                modelo["Fecha de elaboración "] = fecha
+                modelo["Débito"] = j["FNC"]
+                modelo["Código cuenta contable"] = 28150585
+                modelo["Código centro/subcentro de costos"] = j["SUBP"]
+                modelo["Descripción"] = ("APORTE FONDO NECESIDADES CRITICAS " + month + " " +hoja_actual)
+                if entrega == "Cuenta Bancaria":
+                    banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+                    modelo.loc[len(modelo.index)] = banco
+                elif entrega == "Efecty":
+                    gasto = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",53051501,830131993,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1",sum(modelo["Débito"]*0.014),"","","","",""]
+                    modelo.loc[len(modelo.index)] = gasto
+                    banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+                    modelo.loc[len(modelo.index)] = banco
 
 
 
+            # le asignamos el siguiente valor al comprobante
+
+                comprobante = comprobante + 1
+
+            #"Exportamos el Archivo a Excel"
+
+                modelo.drop(modelo.loc[modelo['Débito']==0].index, inplace=True) 
+                if entrega == "Cuenta Bancaria":
+                    modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\FNC BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                elif entrega == "Efecty":
+                    modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\FNC EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                numero_para_guardar_egreso = numero_para_guardar_egreso + 1
+
+
+
+        ############################################# APORTES FOMENTANDO CAPACIDADES ##########################################################################
+
+    for i in lista_sheets:    
+
+            # leemos el archivo con pandas
+            datos_p = pd.read_excel(nombre_archivo,sheet_name=i)
+            datos_p["SUBP"] = datos_p["SUBP"].str.strip()           
+
+            datos_ok = (datos_p["Estado de Entrega"] == "OKA") & (datos_p["Tipo Entrega Aporte"] == entrega)
+            datos = datos_p[datos_ok]
+            datos = datos[datos["FC"] != 0]        
+
+
+            numero_para_guardar_egreso = 1
+
+            hoja_actual = i
+            print(i)
+
+            #" Subdividimos los archivos de a 500 Registros"
+            try:
+                lista_datos = FD.registros_500(datos)
+            except:
+                lista_datos = []
+            #"Organizamos los subproyectos para que sean leidos por el sistema siigo"
+
+            if hoja_actual != "AM":
+
+                for j in lista_datos:
+
+                    for i in range(len(j["SUBP"])):
+                        if len(j["SUBP"][i]) == 2:
+                            j["SUBP"][i] = "0000" + j["SUBP"][i] + "-1"
+                        elif len(j["SUBP"][i]) == 3 and j["SUBP"][i] == "MAI":
+                            j["SUBP"][i] = "00MAIN-1"
+                        elif len(j["SUBP"][i]) == 3 and j["SUBP"][i] == "MAE":
+                            j["SUBP"][i] = "00MAEN-1"
+                        else:
+                            j["SUBP"][i] = "000" + j["SUBP"][i] + "-1"
+
+            elif hoja_actual == "AM":
+
+                for j in lista_datos:
+
+                    for i in range(len(j["SUBP"])):
+
+                        if len(j["SUBP"][i]) == 2 and j["SUBP"][i] == "NJ":
+                            j["SUBP"][i] = "000NJA-1"
+                        elif len(j["SUBP"][i]) == 2:
+                            j["SUBP"][i] = "0000" + j["SUBP"][i] + "-1"
+                        elif len(j["SUBP"][i]) == 3 and j["SUBP"][i] == "MAI":
+                            j["SUBP"][i] = "00MAIA-1"
+                        elif len(j["SUBP"][i]) == 3 and j["SUBP"][i] == "MAE":
+                            j["SUBP"][i] = "00MAEA-1"
+                        else:
+                            j["SUBP"][i] = "000" + j["SUBP"][i] + "-1"
+
+
+            #"Alimentamos el archivo modelo para importar en contabilidad"     
+
+            for j in lista_datos:
+
+                print("Consecutivo Nro: " + str(comprobante))
+                modelo = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Comprobante Modelo.xlsx")
+                modelo["Identificación tercero"] = j["CC Acudiente"] 
+                modelo["Tipo de comprobante"] = 1
+                modelo["Consecutivo comprobante"] = comprobante
+                modelo["Fecha de elaboración "] = fecha
+                modelo["Débito"] = j["FC"]
+                modelo["Código cuenta contable"] = 28150560
+                modelo["Código centro/subcentro de costos"] = j["SUBP"]
+                modelo["Descripción"] = ("APORTE FOMENTANDO CAPACIDADES " + month + " " +hoja_actual)
+                if entrega == "Cuenta Bancaria":
+                    banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+                    modelo.loc[len(modelo.index)] = banco
+                elif entrega == "Efecty":
+                    gasto = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",53051501,830131993,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1",sum(modelo["Débito"]*0.014),"","","","",""]
+                    modelo.loc[len(modelo.index)] = gasto
+                    banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+                    modelo.loc[len(modelo.index)] = banco
+
+
+
+            # le asignamos el siguiente valor al comprobante
+
+                comprobante = comprobante + 1
+
+            #"Exportamos el Archivo a Excel"
+
+                modelo.drop(modelo.loc[modelo['Débito']==0].index, inplace=True) 
+                if entrega == "Cuenta Bancaria":
+                    modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\FC BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                elif entrega == "Efecty":
+                    modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\FC EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                numero_para_guardar_egreso = numero_para_guardar_egreso + 1
+
+
+
+
+        ############################################# APORTE NAVIDAD ##########################################################################
+
+    for i in lista_sheets:    
+
+            # leemos el archivo con pandas
+            datos_p = pd.read_excel(nombre_archivo,sheet_name=i)
+            datos_p["SUBP"] = datos_p["SUBP"].str.strip()           
+
+            datos_ok = (datos_p["Estado de Entrega"] == "OKA") & (datos_p["Tipo Entrega Aporte"] == entrega)
+            datos = datos_p[datos_ok]
+            datos = datos[datos["Navidad"] != 0]        
+
+
+            numero_para_guardar_egreso = 1
+
+            hoja_actual = i
+            print(i)
+
+            #" Subdividimos los archivos de a 500 Registros"
+            try:
+                lista_datos = FD.registros_500(datos)
+            except:
+                lista_datos = []
+            #"Organizamos los subproyectos para que sean leidos por el sistema siigo"
+
+            if hoja_actual != "AM":
+
+                for j in lista_datos:
+
+                    for i in range(len(j["SUBP"])):
+                        if len(j["SUBP"][i]) == 2:
+                            j["SUBP"][i] = "0000" + j["SUBP"][i] + "-1"
+                        elif len(j["SUBP"][i]) == 3 and j["SUBP"][i] == "MAI":
+                            j["SUBP"][i] = "00MAIN-1"
+                        elif len(j["SUBP"][i]) == 3 and j["SUBP"][i] == "MAE":
+                            j["SUBP"][i] = "00MAEN-1"
+                        else:
+                            j["SUBP"][i] = "000" + j["SUBP"][i] + "-1"
+
+            elif hoja_actual == "AM":
+
+                for j in lista_datos:
+
+                    for i in range(len(j["SUBP"])):
+
+                        if len(j["SUBP"][i]) == 2 and j["SUBP"][i] == "NJ":
+                            j["SUBP"][i] = "000NJA-1"
+                        elif len(j["SUBP"][i]) == 2:
+                            j["SUBP"][i] = "0000" + j["SUBP"][i] + "-1"
+                        elif len(j["SUBP"][i]) == 3 and j["SUBP"][i] == "MAI":
+                            j["SUBP"][i] = "00MAIA-1"
+                        elif len(j["SUBP"][i]) == 3 and j["SUBP"][i] == "MAE":
+                            j["SUBP"][i] = "00MAEA-1"
+                        else:
+                            j["SUBP"][i] = "000" + j["SUBP"][i] + "-1"
+
+
+            #"Alimentamos el archivo modelo para importar en contabilidad"     
+
+            for j in lista_datos:
+
+                print("Consecutivo Nro: " + str(comprobante))
+                modelo = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Comprobante Modelo.xlsx")
+                modelo["Identificación tercero"] = j["CC Acudiente"] 
+                modelo["Tipo de comprobante"] = 1
+                modelo["Consecutivo comprobante"] = comprobante
+                modelo["Fecha de elaboración "] = fecha
+                modelo["Débito"] = j["Navidad"]
+                modelo["Código cuenta contable"] = 28150535
+                modelo["Código centro/subcentro de costos"] = j["SUBP"]
+                modelo["Descripción"] = ("APORTE NAVIDAD " + month + " " +hoja_actual)
+                if entrega == "Cuenta Bancaria":
+                    banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+                    modelo.loc[len(modelo.index)] = banco
+                elif entrega == "Efecty":
+                    gasto = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",53051501,830131993,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1",sum(modelo["Débito"]*0.014),"","","","",""]
+                    modelo.loc[len(modelo.index)] = gasto
+                    banco = [1,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+                    modelo.loc[len(modelo.index)] = banco
+
+
+
+            # le asignamos el siguiente valor al comprobante
+
+                comprobante = comprobante + 1
+
+            #"Exportamos el Archivo a Excel"
+
+                modelo.drop(modelo.loc[modelo['Débito']==0].index, inplace=True) 
+                if entrega == "Cuenta Bancaria":
+                    modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\NAVIDAD BANCOLOMBIA " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                elif entrega == "Efecty":
+                    modelo.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\NAVIDAD EFECTY " + str(hoja_actual) + " " + str(numero_para_guardar_egreso) + ".xlsx",index=False)
+                numero_para_guardar_egreso = numero_para_guardar_egreso + 1
+
+
+def terceros(nombre):
+
+    import pandas as pd
+    import warnings
+    import numpy as np
+    warnings.simplefilter("ignore")
+
+    nombre_archivo = nombre
+    datos = pd.read_excel(nombre_archivo,sheet_name="NUEVOS Y CAMBIOS")
+
+    modelo = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Modelo de Terceros.xlsm")
+    modelo["Identificación (Obligatorio)"] = datos["CC Acudiente"]
+    modelo["Tipo identificación"] = 13
+    modelo["Tipo (Obligatorio)"] = "Es persona"
+    modelo["Nombres del tercero (Obligatorio)"] = datos["Primer Nombre Acudiente"]
+    modelo["Apellidos del tercero (Obligatorio)"] = datos["Primer Apellido Acudiente"] 
+    modelo["Dirección"] = datos["Dirección"]
+
+    modelo.to_excel("Terceros por Cargar.xlsm",index=False)
+
+
+
+def gastos_financieros(nombre,date,consecutivo):
+
+    import pandas as pd
+    import warnings
+    import numpy as np
+    import datetime 
+    warnings.simplefilter("ignore")
+
+    dict_calendar = {"January":"ENERO","February":"FEBRERO","March":"MARZO","April":"ABRIL","May":"MAYO","June":"JUNIO","July":"JULIO","August":"AGOSTO",
+                "September":"SEPTIEMBRE","October":"OCTUBRE","November":"NOVIEMBRE","December":"DICIEMBRE"}
+    
+
+    fecha = pd.to_datetime(pd.Series(date))
+    fecha = fecha.dt.strftime("%d/%m/%Y")[0]
+
+    monthinteger = int(fecha[4]) 
+    month = datetime.date(1900, monthinteger, 1).strftime('%B')
+    month = dict_calendar.get(month)
+    nombre_archivo = nombre
+
+    print(nombre_archivo)
+    datos = pd.read_excel(nombre_archivo)
+
+    codigos_comis = [7371,609,1627,7522,9837,9088,3818,7947]
+    codigos_iva = [1630,9089,9336,1233,7447]
+
+    
+
+    datos.columns = ["Cuenta","cod1","cod2","Fecha","cod3","valor1","codigo","concepto","ceros","valor2"]
+
+    datos_comsion = []
+    datos_iva = []
+
+    for i in range(len(datos)):
+        if datos["codigo"][i] in codigos_comis:
+            datos_comsion.append(datos["valor2"][i])
+        elif datos["codigo"][i] in codigos_iva:
+            datos_iva.append(datos["valor2"][i])
+
+
+    modelo = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Comprobante Modelo.xlsx")
+    modelo["Débito"] = datos_comsion
+    modelo["Identificación tercero"] = 890903938
+    modelo["Tipo de comprobante"] = 9
+    modelo["Consecutivo comprobante"] = consecutivo
+    modelo["Fecha de elaboración "] = fecha
+    modelo["Código cuenta contable"] = 53051501
+    modelo["Código centro/subcentro de costos"] = "000100-1"
+    modelo["Descripción"] = "COMISIONES Y GASTOS FINANCIEROS " + month
+
+    banco = [9,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+    modelo.loc[len(modelo.index)] = banco
+    data_comision = modelo
+
+
+    modelo = pd.read_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\static\Comprobante Modelo.xlsx")
+    modelo["Débito"] = datos_iva
+    modelo["Identificación tercero"] = 890903938
+    modelo["Tipo de comprobante"] = 9
+    modelo["Consecutivo comprobante"] = consecutivo
+    modelo["Fecha de elaboración "] = fecha
+    modelo["Código cuenta contable"] = 53050506
+    modelo["Código centro/subcentro de costos"] = "000100-1"
+    modelo["Descripción"] = "IVA GASTOS FINANCIEROS " + month
+
+    banco = [9,modelo["Consecutivo comprobante"][0], modelo["Fecha de elaboración "][0],"","",11100511,890903938,"","","","","","","","","","","","",modelo["Descripción"][0],"000100-1","",sum(modelo["Débito"]),"","","",""]
+    modelo.loc[len(modelo.index)] = banco
+
+    data_iva = modelo
+    data_consolidate = pd.concat([data_comision,data_iva])
+
+    data_consolidate.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\media\GASTOS FINANCIEROS " + month + ".xlsx",index=False)
+
+    

@@ -293,12 +293,12 @@ class Consolidar:
             a = pd.read_excel(d)
             archivos.append(a)
             consolidacion = pd.concat(archivos,ignore_index=False)
-
-        consolidacion.to_excel("CONSOLIDACION " + tipo + ".xlsx",index=False)
+ 
+        consolidacion.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\CONSOLIDACION " + tipo + ".xlsx",index=False)
 
         for d in directorio:
             remove(d)
-        
+         
         print("\n*************** FELICITACIONES SE GENERO CON EXITO ***************\n")
 
         
@@ -311,12 +311,12 @@ class Consolidar:
         
         
 class Egreso_Abila:
-    
+  
     def egreso_general(colectivo,empresa,fecha,consecutivo,path):
         
         ''' colectivo = NNJ-AM-V
             empresa = BANCOLOMBIA o EFECTY
-            fecha = Formato (Mes/Dia/Año)
+            fecha = Formato (Mes/Dia/Año)  
             consecutivo = Numero
             path = Ubicacion del Archivo Unificado de Dispersion '''
 
@@ -344,7 +344,7 @@ class Egreso_Abila:
         elif colectivo == "V":
             list_subp = ["COAN-CS","COAN-SC"]        
         
-
+        print(colectivo)
         fecha = fecha
         fecha = pd.to_datetime(pd.Series(fecha))
         fecha = fecha.dt.strftime("%m/%d/%Y")[0]
@@ -405,7 +405,7 @@ class Egreso_Abila:
 
             # Generamos el Archivo de Importacion
 
-            abila_egreso.to_excel("/webapps/project/proyectounbound/media/DISPERSION APORTE " + empresa + " " + sheet + ".xlsx",index=False)
+            abila_egreso.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\DISPERSION APORTE " + empresa + " " + sheet + ".xlsx",index=False)
 
             print("\n*************** FELICITACIONES SE GENERO CON EXITO ***************\n")
         except:
@@ -502,7 +502,7 @@ class Egreso_Abila:
 
             # Generamos el Archivo de Importacion
 
-            abila_egreso.to_excel("/webapps/project/proyectounbound/media/DISPERSION CUMPLEANIOS " + empresa + " " + sheet + ".xlsx",index=False)
+            abila_egreso.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\DISPERSION CUMPLEANIOS " + empresa + " " + sheet + ".xlsx",index=False)
 
             print("\n*************** FELICITACIONES SE GENERO CON EXITO ***************\n")
         except:
@@ -601,7 +601,7 @@ class Egreso_Abila:
 
             # Generamos el Archivo de Importacion
 
-            abila_egreso.to_excel("/webapps/project/proyectounbound/media/DISPERSION REGALOS " + empresa + " " + sheet + ".xlsx",index=False)
+            abila_egreso.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\DISPERSION REGALOS " + empresa + " " + sheet + ".xlsx",index=False)
 
 
             print("\n*************** FELICITACIONES SE GENERO CON EXITO ***************\n")
@@ -616,8 +616,7 @@ class Egreso_Abila:
         
     def egreso_fomentado(colectivo,empresa,fecha,consecutivo,path):
         
-        ''' colectivo = FC
-            empresa = BANCOLOMBIA o EFECTY
+        ''' empresa = BANCOLOMBIA o EFECTY
             fecha = Formato (Mes/Dia/Año)
             consecutivo = Numero
             path = Ubicacion del Archivo Unificado de Dispersion '''
@@ -653,50 +652,145 @@ class Egreso_Abila:
         data = data[data_ok]
 
         try:
+            if colectivo == "NNJ":
             # Creamos el archivo para importar en abila
-            abila_egreso = pd.DataFrame()
-            abila_egreso["XXXXXXXX"] = data["SUBP"] + "000" + consecutivo
-            abila_egreso["SESSION"] = "CD-COAN-99-" + dict_calendar.get(fecha[0:2]) + fecha[6:] +"-DC"
-            abila_egreso["DESCRIPTION"] = "DISPERSION MES DE " + dict_calendar.get(fecha[0:2])
-            abila_egreso["DATE"] = fecha
-            abila_egreso["DOCUMENT"] = consecutivo
-            abila_egreso["DESCRIPTION DOC"] = "FOMENTANDO CAPACIDADES MES DE " + dict_calendar.get(fecha[0:2])
-            abila_egreso["DATE2"] = fecha
-            abila_egreso["EMPTY"] = ""
-            abila_egreso["SUBP"] = "COAN-" + data["SUBP"]
-            abila_egreso["FOUND"] = "10"
-            abila_egreso["GL"] = "20110"
-            abila_egreso["DPTO"] = "0"
-            abila_egreso["CH"] = data["CH"]
-            abila_egreso["DEBIT"] = data["Aporte Mes Actual"] + data["Solicita"]
-            abila_egreso["CREDIT"] = ""
-            abila_egreso.drop(columns="XXXXXXXX",inplace=True)
-            abila_egreso.drop(abila_egreso.loc[abila_egreso['CREDIT']==0].index, inplace=True) 
-            abila_egreso.reset_index(drop=True,inplace=True)
+                abila_egreso = pd.DataFrame()
+                abila_egreso["XXXXXXXX"] = data["SUBP"] + "000" + consecutivo
+                abila_egreso["SESSION"] = "CD-COAN-99-" + dict_calendar.get(fecha[0:2]) + fecha[6:] +"-DC"
+                abila_egreso["DESCRIPTION"] = "DISPERSION MES DE " + dict_calendar.get(fecha[0:2])
+                abila_egreso["DATE"] = fecha
+                abila_egreso["DOCUMENT"] = consecutivo
+                abila_egreso["DESCRIPTION DOC"] = "FOMENTANDO CAPACIDADES MES DE " + dict_calendar.get(fecha[0:2])
+                abila_egreso["DATE2"] = fecha
+                abila_egreso["EMPTY"] = ""
+                abila_egreso["SUBP"] = "COAN-" + data["SUBP"]
+                abila_egreso["FOUND"] = "10"
+                abila_egreso["GL"] = "20110"
+                abila_egreso["DPTO"] = "0"
+                abila_egreso["CH"] = data["CH"]
+                abila_egreso["DEBIT"] = data["FC"]
+                abila_egreso["CREDIT"] = ""
+                abila_egreso.drop(columns="XXXXXXXX",inplace=True)
+                abila_egreso.drop(abila_egreso.loc[abila_egreso['CREDIT']==0].index, inplace=True) 
+                abila_egreso.reset_index(drop=True,inplace=True)
 
-            for i in list_subp:
-                banco_subp = abila_egreso.loc[abila_egreso['SUBP'] == i]
-                banco = [abila_egreso["SESSION"][0],abila_egreso["DESCRIPTION"][0],fecha,
-                        consecutivo,abila_egreso["DESCRIPTION DOC"][0],fecha,"",
-                        i,abila_egreso["FOUND"][0],"10105","0","",0,sum(banco_subp["DEBIT"])]
-                abila_egreso.loc[len(abila_egreso.index)] = banco
-
-
-            # organizamos los datos para que queden en orden de subproyecto
-
-            abila_egreso.sort_values(["SUBP","FOUND"],inplace=True)
-
-            #Eliminamos registros innecesarios
-
-            abila_egreso.drop(abila_egreso.loc[(abila_egreso['CREDIT']=="") & (abila_egreso['DEBIT']==0) ].index, inplace=True)
-
-            abila_egreso.drop(abila_egreso.loc[(abila_egreso['CREDIT']==0) & (abila_egreso['DEBIT']==0) ].index, inplace=True)
-
-            # Generamos el Archivo de Importacion
-
-            abila_egreso.to_excel("/webapps/project/proyectounbound/media/DISPERSION FOMENTANDO CAPACIDADES " + empresa + " " + sheet + ".xlsx",index=False)
+                for i in list_subp:
+                    banco_subp = abila_egreso.loc[abila_egreso['SUBP'] == i]
+                    banco = [abila_egreso["SESSION"][0],abila_egreso["DESCRIPTION"][0],fecha,
+                            consecutivo,abila_egreso["DESCRIPTION DOC"][0],fecha,"",
+                            i,abila_egreso["FOUND"][0],"10105","0","",0,sum(banco_subp["DEBIT"])]
+                    abila_egreso.loc[len(abila_egreso.index)] = banco
 
 
-            print("\n*************** FELICITACIONES SE GENERO CON EXITO ***************\n")
+                # organizamos los datos para que queden en orden de subproyecto
+
+                abila_egreso.sort_values(["SUBP","FOUND"],inplace=True)
+
+                #Eliminamos registros innecesarios
+
+                abila_egreso.drop(abila_egreso.loc[(abila_egreso['CREDIT']=="") & (abila_egreso['DEBIT']==0) ].index, inplace=True)
+
+                abila_egreso.drop(abila_egreso.loc[(abila_egreso['CREDIT']==0) & (abila_egreso['DEBIT']==0) ].index, inplace=True)
+
+                # Generamos el Archivo de Importacion
+
+                abila_egreso.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\DISPERSION FOMENTANDO CAPACIDADES " + empresa + " " + sheet + ".xlsx",index=False)
+
+
+                print("\n*************** FELICITACIONES SE GENERO CON EXITO ***************\n")
         except:
             print("No hay datos")
+
+    
+
+    def egreso_necesidades(colectivo,empresa,fecha,consecutivo,path):
+        
+            ''' empresa = BANCOLOMBIA o EFECTY
+                fecha = Formato (Mes/Dia/Año)
+                consecutivo = Numero
+                path = Ubicacion del Archivo Unificado de Dispersion '''
+                
+            import pandas as pd
+            import numpy as np
+
+            dict_calendar={"01":"ENERO","02":"FEBRERO","03":"MARZO","04":"ABRIL","05":"MAYO","06":"JUNIO","07":"JULIO",
+            "08":"AGOSTO","09":"SEPTIEMBRE","10":"OCTUBRE","11":"NOVIEMBRE","12":"DICIEMBRE"}
+
+            if empresa == "BANCOLOMBIA":
+                tipo_entrega = "Cuenta Bancaria"
+
+            elif empresa == "EFECTY":
+                tipo_entrega = "Efecty"
+
+            # Incluimos la informacion necesaria para leer los datos relevantes:
+
+            # Incluimos la informacion necesaria para leer los datos relevantes:
+
+            if colectivo == "NNJ": 
+                list_subp = ["COAN-FCC","COAN-FG","COAN-FJ","COAN-MAE","COAN-MAI","COAN-MT","COAN-MV","COAN-NH", 
+                            "COAN-NJ","COAN-PN"]
+
+            elif colectivo == "AM":
+                list_subp = ["COAN-AC","COAN-FZ","COAN-MAE","COAN-MAI","COAN-NJ","COAN-VP","COAN-HD"]
+
+            
+            fecha = fecha
+            fecha = pd.to_datetime(pd.Series(fecha))
+            fecha = fecha.dt.strftime("%m/%d/%Y")[0]
+            consecutivo = consecutivo
+            archivo = path
+            sheet = colectivo
+            data = pd.read_excel(archivo,sheet_name=sheet)
+            data["SUBP"] = data["SUBP"].str.strip()
+
+            data_ok = (data["Estado de Entrega"] == "OKA") & (data["Tipo Entrega Aporte"] == tipo_entrega)
+            data = data[data_ok]
+
+            try:
+                # Creamos el archivo para importar en abila
+                    abila_egreso = pd.DataFrame()
+                    abila_egreso["XXXXXXXX"] = data["SUBP"] + "000" + consecutivo
+                    abila_egreso["SESSION"] = "CD-COAN-99-" + dict_calendar.get(fecha[0:2]) + fecha[6:] +"-DC"
+                    abila_egreso["DESCRIPTION"] = "DISPERSION MES DE " + dict_calendar.get(fecha[0:2])
+                    abila_egreso["DATE"] = fecha
+                    abila_egreso["DOCUMENT"] = consecutivo
+                    abila_egreso["DESCRIPTION DOC"] = "FONDO DE NECESIDADES CRITICAS MES DE " + dict_calendar.get(fecha[0:2])
+                    abila_egreso["DATE2"] = fecha
+                    abila_egreso["EMPTY"] = ""
+                    abila_egreso["SUBP"] = "COAN-" + data["SUBP"]
+                    abila_egreso["FOUND"] = "53"
+                    abila_egreso["GL"] = "20110"
+                    abila_egreso["DPTO"] = "0"
+                    abila_egreso["CH"] = data["CH"]
+                    abila_egreso["DEBIT"] = data["FNC"]
+                    abila_egreso["CREDIT"] = ""
+                    abila_egreso.drop(columns="XXXXXXXX",inplace=True)
+                    abila_egreso.drop(abila_egreso.loc[abila_egreso['CREDIT']==0].index, inplace=True) 
+                    abila_egreso.reset_index(drop=True,inplace=True)
+
+                    for i in list_subp:
+                        banco_subp = abila_egreso.loc[abila_egreso['SUBP'] == i]
+                        banco = [abila_egreso["SESSION"][0],abila_egreso["DESCRIPTION"][0],fecha,
+                                consecutivo,abila_egreso["DESCRIPTION DOC"][0],fecha,"",
+                                i,abila_egreso["FOUND"][0],"10105","0","",0,sum(banco_subp["DEBIT"])]
+                        abila_egreso.loc[len(abila_egreso.index)] = banco
+
+
+                    # organizamos los datos para que queden en orden de subproyecto
+
+                    abila_egreso.sort_values(["SUBP","FOUND"],inplace=True)
+
+                    #Eliminamos registros innecesarios
+
+                    abila_egreso.drop(abila_egreso.loc[(abila_egreso['CREDIT']=="") & (abila_egreso['DEBIT']==0) ].index, inplace=True)
+
+                    abila_egreso.drop(abila_egreso.loc[(abila_egreso['CREDIT']==0) & (abila_egreso['DEBIT']==0) ].index, inplace=True)
+
+                    # Generamos el Archivo de Importacion
+
+                    abila_egreso.to_excel(r"C:\Users\darwi\Desktop\proyectounbound - Local\DISPERSION FNC " + empresa + " " + sheet + ".xlsx",index=False)
+
+
+                    print("\n*************** FELICITACIONES SE GENERO CON EXITO ***************\n")
+            except:
+                print("No hay datos")

@@ -17,10 +17,11 @@
 h4{ 
     display: block;
     margin-top: 50px;
-    margin-right: 50px;
-    margin-left: 150px;
+    margin-right: 120px;
+    margin-left: 110px;
     width: 100%;
     font-size: 23px;
+    
     
 }
 
@@ -30,9 +31,9 @@ body{
 }
 
 img{
-    width: 300px;
-    height: 300px;
-    margin-left: 150px;
+    width: 250px;
+    height: 250px;
+    margin-left: 100px;
     margin-top: 100px;
     box-shadow: 5px 10px 18px black;
 }
@@ -65,6 +66,17 @@ a{
     left: -75px;
     width: 500px;
     height: 500px;
+}
+
+
+.img-tercero-siigo{
+    box-shadow: none;
+    position: absolute;
+    left: -15px;
+    width: 500px;
+    height: 500px;
+
+
 }
 
 .form-cta28{

@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView,ListView
 from pandas import concat
-from applications.archivo_txt.funciones import archivo_txt, ingreso_28 , ingreso_41 , egreso_general_siigo
+from applications.archivo_txt.funciones import archivo_txt, ingreso_28 , ingreso_41 , egreso_general_siigo , terceros , gastos_financieros
 from django.core.files.storage import FileSystemStorage
 from applications.archivo_txt.funciones_abila import *
 from openpyxl import Workbook ,load_workbook
@@ -25,23 +25,6 @@ class RegistroInicial(TemplateView):
 
 class Abila(TemplateView):
     template_name = 'archivo_txt/seccion_abila.html'
-
-class ReporteExcel(TemplateView):
-
-    def get(self,request):
-        
-        fs = FileSystemStorage()
-        nombre_archivo = "Archivo_Plano_Excel.xlsx"
-        response = HttpResponse(content_type='application/vnd.ms-excel')
-        contenido = 'attachment;filename = {0}'.format(nombre_archivo)
-        response["Content-Disposition"] = contenido 
-        print(fs.listdir("/webapps/project/proyectounbound/media/")[1])
-        print(len(fs.listdir("/webapps/project/proyectounbound/media/")[1]))
-        print(fs.path(fs.listdir("/webapps/project/proyectounbound/media/")[1][0]))
-        wb = load_workbook(str(fs.path(fs.listdir("/webapps/project/proyectounbound/media/")[1][0])))
-        wb.save(response)
-        fs.delete(fs.path(fs.listdir("/webapps/project/proyectounbound/media/")[1][0]))
-        return response
         
         
             
@@ -56,14 +39,11 @@ def upload(request):
         uploaded_emp = request.POST["empresa"]
         fs = FileSystemStorage()
         name = fs.save(uploaded_file.name,uploaded_file)
-        fs.delete(fs.path(fs.listdir("/webapps/project/proyectounbound/media/")[1][0]))
         
         try:
              archivo=archivo_txt(uploaded_file,uploaded_date,uploaded_emp)
              context['url'] = fs.url(name)
-             
-             
-             
+                 
         except Exception as e:
             context.update({'error': e})
             print(repr(e))
@@ -177,7 +157,7 @@ def egreso_abila(request):
         uploaded_date = request.POST["date"]
         uploaded_conse = request.POST["consecutivo"]
         uploaded_empresa = request.POST["empresa"]
-        uploaded_entre = ["NNJ","AM","V","FC"]
+        uploaded_entre = ["NNJ","AM","V"]
         fs = FileSystemStorage()
         name = fs.save(uploaded_file.name,uploaded_file)
         url = fs.url(name)
@@ -191,7 +171,8 @@ def egreso_abila(request):
                 context['url'] = fs.url(name)
                 Egreso_Abila.egreso_fomentado(i,uploaded_empresa,uploaded_date,uploaded_conse,uploaded_file)
                 context['url'] = fs.url(name)
-                
+                Egreso_Abila.egreso_necesidades(i,uploaded_empresa,uploaded_date,uploaded_conse,uploaded_file)
+                context['url'] = fs.url(name)
                 
             except Exception as e:
                 context.update({'error': e})
@@ -203,3 +184,45 @@ def egreso_abila(request):
             context.update({'error': e})
             print(repr(e))
     return render(request,"archivo_txt/egreso_abila.html",context)
+
+
+def tercero_siigo(request):
+    
+    context = {'var1': 'Archivo con error','error': 'Archivo con error'}
+    if  request.method == 'POST':
+        uploaded_file = request.FILES["Tercero"]
+        fs = FileSystemStorage()
+        name = fs.save(uploaded_file.name,uploaded_file)
+        url = fs.url(name)
+
+        try:
+             terceros(uploaded_file)
+             context['url'] = fs.url(name)
+             
+        except Exception as e:
+            context.update({'error': e})
+            print(repr(e))
+        
+    return render(request,"archivo_txt/tercero.html",context)
+
+
+def gastos_financieros_siigo(request):
+
+        context = {'var1': 'Archivo con error','error': 'Archivo con error'}
+        if  request.method == 'POST':
+            uploaded_file = request.FILES["gasto"]
+            uploaded_date = request.POST["date"]
+            uploaded_conse = request.POST["consecutivo"]
+            fs = FileSystemStorage()
+            name = fs.save(uploaded_file.name,uploaded_file)
+            url = fs.url(name)
+            try:
+                gastos_financieros(uploaded_file,uploaded_date,uploaded_conse)
+                context['url'] = fs.url(name)
+            
+            except Exception as e:
+                context.update({'error': e})
+                print(repr(e))
+            
+        return render(request,"archivo_txt/gastos_financieros.html",context)
+

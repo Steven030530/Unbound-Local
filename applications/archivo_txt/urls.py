@@ -6,7 +6,6 @@ from . import views
 from applications.archivo_txt.funciones import archivo_txt
 from django.conf import settings
 from django.conf.urls.static import static
-from applications.archivo_txt.views import ReporteExcel
 
 
 
@@ -23,7 +22,7 @@ urlpatterns = [
     path("abila/",views.Abila.as_view(),name="abila"),
     path("abila/ingreso/",views.ingreso_abila,name="abila_ingreso"),
     path("abila/egreso/",views.egreso_abila,name="egreso_ingreso"),
-    path("abila/egreso/",views.egreso_abila,name="egreso_ingreso"),
-    path('reporte/',views.ReporteExcel.as_view(),name="reporte")
+    path("siigo/tercero/",views.tercero_siigo,name="tercero_siigo"),
+    path("siigo/finanzas/",views.gastos_financieros_siigo,name="finanzas_siigo"),
 ] +static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
 

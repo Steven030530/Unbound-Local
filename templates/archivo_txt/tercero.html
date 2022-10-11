@@ -1,25 +1,27 @@
 {% load static %}
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'style-generator.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'style-siigo.css' %}" type="text/css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Concert+One&family=Fredoka+One&family=Righteous&display=swap" rel="stylesheet">
-    <title>TXT</title>
+
+    <title>TERCEROS</title>
 </head>
 <body>
     
     <div align="center">
     
-        <h1 class="title">GENERADOR DE ARCHIVOS TXT</h1>
+        <h1 class="title">ARCHIVO PLANO TERCEROS SIIGO</h1>
 
         {% if url %} 
-        <svg class="confeti1" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            <svg class="confeti1" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
     viewBox="0 0 512.004 512.004" style="enable-background:new 0 0 512.004 512.004;" xml:space="preserve">
     <g>
         <path class="path2" style="fill:#F9DE8F;" d="M143.037,335.962l9.771,19.797c0.214,0.433,0.627,0.733,1.104,0.802l21.848,3.174
@@ -86,8 +88,8 @@
         <circle style="fill:#67D1D3;" cx="177.018" cy="55.034" r="9.446"/>
     </g>
 
-        </svg>
-        <svg class="confeti2" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            </svg>
+            <svg class="confeti2" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
     viewBox="0 0 512.004 512.004" style="enable-background:new 0 0 512.004 512.004;" xml:space="preserve">
     <g>
         <path class = "path2" style="fill:#F9DE8F;" d="M143.037,335.962l9.771,19.797c0.214,0.433,0.627,0.733,1.104,0.802l21.848,3.174
@@ -154,8 +156,8 @@
         <circle class = "path1" style="fill:#67D1D3;" cx="177.018" cy="55.034" r="9.446"/>
     </g>
 
-        </svg>
-        <svg class="confeti3" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            </svg>
+            <svg class="confeti3" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
     viewBox="0 0 512.004 512.004" style="enable-background:new 0 0 512.004 512.004;" xml:space="preserve">
     <g>
         <path class="path2" style="fill:#F9DE8F;" d="M143.037,335.962l9.771,19.797c0.214,0.433,0.627,0.733,1.104,0.802l21.848,3.174
@@ -222,14 +224,13 @@
         <circle class= "circle1" style="fill:#67D1D3;" cx="177.018" cy="55.034" r="9.446"/>
     </g>
 
-        </svg>
+            </svg>
+        {% endif %}   
 
-        {% endif %}
-        
-       
-        
-            
-        {% ifnotequal error var1  %} 
+
+        <img class="img-tercero-siigo" src="/static/images/tercero.svg" alt="28-img">
+
+        {% ifnotequal error  var1 %} 
             <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                 viewBox="0 0 47.095 47.095" style="enable-background:new 0 0 47.095 47.095;" xml:space="preserve">
                 <g>
@@ -240,13 +241,7 @@
                 </g>
             </svg>
             {{error}}
-            
         {% endifnotequal %}
-                
-
-        <img src="/static/images/image-generator.svg" alt="generator-img">
-        
-        
             
             {% if url %}
                 <h1 class="success">GENERADO EXITOSAMENTE</h1>
@@ -257,19 +252,11 @@
             {% endifnotequal %}
                
            
-        <form method="post" enctype="multipart/form-data">{% csrf_token %}
-            <h3>Seleccione el Tipo de Entrega</h3>
-            <select name="empresa" id="">
-                <option value="Bancolombia">Bancolombia</option>
-                <option value="Efecty">Efecty</option>
-            </select>
-            
-            <h3>Cargar Archivo Dispersion Unificada</h3>
-            <input type="file" class="carga" name="ArchivoTxt" required>
-            <h3>Seleccionar Fecha</h3>
-            <input class="form-date__input" type="date" name = "date"required>
+        <form class="form-cta28" method="post" enctype="multipart/form-data">{% csrf_token %}
+            <h3>Cargar Datos para Entrega de Aportes</h3>
+            <input type="file" class="carga" name="Tercero" required>
             <button class="btn-enviar" type="submit">EJECUTAR</button>
-            <button class="btn-regresar"><a href="{% url 'unbound_app:inicio' %}">INICIO</a></button>
+            <button class="btn-regresar"><a href="{% url 'unbound_app:registro' %}">VOLVER</a></button>
 
         </form>                            
     </div>
