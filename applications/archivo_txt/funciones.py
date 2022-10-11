@@ -1144,8 +1144,8 @@ def gastos_financieros(nombre,date,consecutivo):
     print(nombre_archivo)
     datos = pd.read_excel(nombre_archivo)
 
-    codigos_comis = [7371,609,1627,7522,9837,9088,3818,7947]
-    codigos_iva = [1630,9089,9336,1233,7447]
+    codigos_comis = [7371,609,1627,7522,9837,9088,3818,7947,7524]
+    codigos_iva = [1630,9089,9336,1233,7447]    
 
     
 
