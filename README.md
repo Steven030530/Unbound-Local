@@ -11,5 +11,7 @@ Debemos instalar python lo podemos hacer atraves de [Anaconda](https://www.anaco
 * Numpy
 * Openpyxl
 * Request
+* Django Version 3.2
+
 
 Luego accedemos al cmd de Anaconda he ingresamos al proyecto y ejecutamos **python manage.py runserver** para ejecutar el programa el cual nos dara un url que nos enviara a la pagina donde debemos gestionar el importe de los archivos a trabajar.
