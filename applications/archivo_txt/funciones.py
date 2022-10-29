@@ -1,4 +1,7 @@
 
+from time import monotonic
+
+
 def archivo_txt(name,fecha,empresa):
 
     from django.shortcuts import render
@@ -414,9 +417,10 @@ def egreso_general_siigo(name,date,consecutivo,entrega):
     lista_sheets.remove("LISTAS")
     fecha = pd.to_datetime(pd.Series(date))
     fecha = fecha.dt.strftime("%d/%m/%Y")[0]
-    monthinteger = int(fecha[4]) 
+    monthinteger = int(fecha[3:5]) 
     month = datetime.date(1900, monthinteger, 1).strftime('%B')
     month = dict_calendar.get(month)
+
     comprobante = consecutivo
     print(entrega)
 
