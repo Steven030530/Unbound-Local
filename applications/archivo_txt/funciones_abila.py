@@ -56,7 +56,7 @@ class Ingresos_Abila:
                 abila_ingreso["FOUND"] = "19"
             abila_ingreso["GL"] = "20110"
             abila_ingreso["DPTO"] = "0"
-            abila_ingreso["CH"] = data["CH"]
+            abila_ingreso["CH"] = "CH" + data["CH"].astype(str)
             abila_ingreso["DEBIT"] = ""
             abila_ingreso["CREDIT"] = data["Aporte Mes Actual"]
             abila_ingreso.drop(columns="XXXXXXXX",inplace=True)
@@ -93,7 +93,7 @@ class Ingresos_Abila:
             print("\n*************** FELICITACIONES SE GENERO CON EXITO ***************\n")
         except:
             print("No hay datos")
-
+     
 
     def aporte_cumpleanios(colectivo,fecha,consecutivo,path):
         
@@ -145,7 +145,7 @@ class Ingresos_Abila:
             abila_ingreso["FOUND"] = "20"
             abila_ingreso["GL"] = "20110"
             abila_ingreso["DPTO"] = "0"
-            abila_ingreso["CH"] = data["CH"]
+            abila_ingreso["CH"] = "CH" + data["CH"].astype(str)
             abila_ingreso["DEBIT"] = ""
             abila_ingreso["CREDIT"] = data["Cumpleaños"]
             abila_ingreso.drop(columns="XXXXXXXX",inplace=True)
@@ -231,7 +231,7 @@ class Ingresos_Abila:
             abila_ingreso["FOUND"] = "51"
             abila_ingreso["GL"] = "20110"
             abila_ingreso["DPTO"] = "0"
-            abila_ingreso["CH"] = data["CH"]
+            abila_ingreso["CH"] = "CH" + data["CH"].astype(str)
             abila_ingreso["DEBIT"] = ""
             abila_ingreso["CREDIT"] = data["Regalo Especial"]
             abila_ingreso.drop(columns="XXXXXXXX",inplace=True)
@@ -379,7 +379,7 @@ class Egreso_Abila:
                     
             abila_egreso["GL"] = "20110"
             abila_egreso["DPTO"] = "0"
-            abila_egreso["CH"] = data["CH"]
+            abila_egreso["CH"] = "CH" + data["CH"].astype(str)
             abila_egreso["DEBIT"] = data["Aporte Mes Actual"] + data["Solicita"]
             abila_egreso["CREDIT"] = ""
             abila_egreso.drop(columns="XXXXXXXX",inplace=True)
@@ -474,7 +474,7 @@ class Egreso_Abila:
             abila_egreso["FOUND"] = "20"
             abila_egreso["GL"] = "20110"
             abila_egreso["DPTO"] = "0"
-            abila_egreso["CH"] = data["CH"]
+            abila_egreso["CH"] = "CH" + data["CH"].astype(str)
             abila_egreso["DEBIT"] = data["Cumpleaños"]
             abila_egreso["CREDIT"] = ""
             abila_egreso.drop(columns="XXXXXXXX",inplace=True)
@@ -574,7 +574,7 @@ class Egreso_Abila:
             abila_egreso["FOUND"] = "51"
             abila_egreso["GL"] = "20110"
             abila_egreso["DPTO"] = "0"
-            abila_egreso["CH"] = data["CH"]
+            abila_egreso["CH"] = "CH" + data["CH"].astype(str)
             abila_egreso["DEBIT"] = data["Regalo Especial"]
             abila_egreso["CREDIT"] = ""
             abila_egreso.drop(columns="XXXXXXXX",inplace=True)
@@ -667,7 +667,7 @@ class Egreso_Abila:
                 abila_egreso["FOUND"] = "10"
                 abila_egreso["GL"] = "20110"
                 abila_egreso["DPTO"] = "0"
-                abila_egreso["CH"] = data["CH"]
+                abila_egreso["CH"] = "CH" + data["CH"].astype(str)
                 abila_egreso["DEBIT"] = data["FC"]
                 abila_egreso["CREDIT"] = ""
                 abila_egreso.drop(columns="XXXXXXXX",inplace=True)
@@ -761,7 +761,7 @@ class Egreso_Abila:
                     abila_egreso["FOUND"] = "53"
                     abila_egreso["GL"] = "20110"
                     abila_egreso["DPTO"] = "0"
-                    abila_egreso["CH"] = data["CH"]
+                    abila_egreso["CH"] = "CH" + data["CH"].astype(str)
                     abila_egreso["DEBIT"] = data["FNC"]
                     abila_egreso["CREDIT"] = ""
                     abila_egreso.drop(columns="XXXXXXXX",inplace=True)
