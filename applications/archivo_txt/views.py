@@ -134,6 +134,8 @@ def ingreso_abila(request):
                 context['url'] = fs.url(name)
                 Ingresos_Abila.aporte_regalo(i,uploaded_date,uploaded_conse,uploaded_file)
                 context['url'] = fs.url(name)
+                Ingresos_Abila.aporte_navidad(i,uploaded_date,uploaded_conse,uploaded_file)
+                context['url'] = fs.url(name)
                 
                 
             except Exception as e:
@@ -172,6 +174,8 @@ def egreso_abila(request):
                 Egreso_Abila.egreso_fomentado(i,uploaded_empresa,uploaded_date,uploaded_conse,uploaded_file)
                 context['url'] = fs.url(name)
                 Egreso_Abila.egreso_necesidades(i,uploaded_empresa,uploaded_date,uploaded_conse,uploaded_file)
+                context['url'] = fs.url(name)
+                Egreso_Abila.egreso_navidad(i,uploaded_empresa,uploaded_date,uploaded_conse,uploaded_file)
                 context['url'] = fs.url(name)
                 
             except Exception as e:

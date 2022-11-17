@@ -166,10 +166,10 @@ def ingreso_41(name,date,consecutivo):
     consecutivo = consecutivo
     fecha = pd.to_datetime(pd.Series(date))
     fecha = fecha.dt.strftime("%d/%m/%Y")[0]
-    nombre_archivo = name
-    monthinteger = int(fecha[4]) 
+    monthinteger = int(fecha[3:5]) 
     month = datetime.date(1900, monthinteger, 1).strftime('%B')
-    month = dict_calendar.get(month) 
+    month = dict_calendar.get(month)
+    nombre_archivo = name
     # ORGANIZAR TABLA DE CONSOLIDACION
 
     datos = pd.read_excel(nombre_archivo,sheet_name="Consolidacion",index_col="SUBPROYECTO")
@@ -178,7 +178,7 @@ def ingreso_41(name,date,consecutivo):
 
     # SEPARAMOS LOS VALORES QUE VAN AL INGRESO Y LOS QUE VAN AL PASIVO
 
-    ingreso = consolidacion.drop(index=["Refrigerios y Materiales GU","Gala de Los Mejores","Refrigerios Navidad","Fomentando Capacidades"])
+    ingreso = consolidacion.drop(index=["Refrigerios y Materiales GU","Fomentando Capacidades","Encuentro Intergeneracional","Cierre GU"])
     pasivo = consolidacion.drop(index= ingreso.index )
 
     # CREAMOS UNA TABLA QUE CONTENGA LOS REGISTROS DEL INGRESO
@@ -263,9 +263,9 @@ def ingreso_28(name,date,consecutivo):
     consecutivo = int(consecutivo)
     fecha = pd.to_datetime(pd.Series(date))
     fecha = fecha.dt.strftime("%d/%m/%Y")[0]
-    monthinteger = int(fecha[4]) 
+    monthinteger = int(fecha[3:5]) 
     month = datetime.date(1900, monthinteger, 1).strftime('%B')
-    month = dict_calendar.get(month) 
+    month = dict_calendar.get(month)
     nombre_archivo = name
     hojas = pd.read_excel(nombre_archivo,sheet_name=None)
     lista_sheets = list(hojas.keys())
@@ -1139,8 +1139,7 @@ def gastos_financieros(nombre,date,consecutivo):
 
     fecha = pd.to_datetime(pd.Series(date))
     fecha = fecha.dt.strftime("%d/%m/%Y")[0]
-
-    monthinteger = int(fecha[4]) 
+    monthinteger = int(fecha[3:5]) 
     month = datetime.date(1900, monthinteger, 1).strftime('%B')
     month = dict_calendar.get(month)
     nombre_archivo = nombre
@@ -1153,7 +1152,7 @@ def gastos_financieros(nombre,date,consecutivo):
 
     
 
-    datos.columns = ["Cuenta","cod1","cod2","Fecha","cod3","valor1","codigo","concepto","ceros","valor2"]
+    datos.columns = ["Fecha","Valor1","codigo","concepto","ceros","valor2"]
 
     datos_comsion = []
     datos_iva = []
