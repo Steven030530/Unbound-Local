@@ -1,0 +1,6 @@
+services:
+  unbound-csv:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    
