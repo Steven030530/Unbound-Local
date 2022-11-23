@@ -7,11 +7,14 @@ Herramienta para la importación de archivos planos de información financiera y
 
 Debemos instalar python lo podemos hacer atraves de [Anaconda](https://www.anaconda.com/ "Anaconda"), luego instalamos con el comando pip install las siguientes librerias:
 
-* Pandas
-* Numpy
-* Openpyxl
-* Request
-* Django Version 3.2
+```
+    git clone
+    source  unbound/Scripts/activate
+    pip install -r requeriments.txt
+    python manage.py runserver
+    Starting development server at http://127.0.0.1:8000/
+    
+```
 
 
-Luego accedemos al cmd de Anaconda he ingresamos al proyecto y ejecutamos **python manage.py runserver** para ejecutar el programa el cual nos dara un url que nos enviara a la pagina donde debemos gestionar el importe de los archivos a trabajar.
+
