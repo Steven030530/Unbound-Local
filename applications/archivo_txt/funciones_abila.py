@@ -914,6 +914,8 @@ class Egreso_Abila:
             elif colectivo == "AM":
                 list_subp = ["COAN-AC","COAN-FZ","COAN-MAE","COAN-MAI","COAN-NJ","COAN-VP","COAN-HD"]
 
+            elif colectivo == "V":
+                list_subp = ["COAN-CS","COAN-SC"] 
             
             fecha = fecha
             fecha = pd.to_datetime(pd.Series(fecha))
