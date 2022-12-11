@@ -250,6 +250,7 @@ def ingreso_41(name,date,consecutivo):
 ######################################################################################################################################################################
 
 def ingreso_28(name,date,consecutivo):
+
     import pandas as pd
     import warnings
     import calendar
@@ -281,6 +282,7 @@ def ingreso_28(name,date,consecutivo):
 
             try:
                 lista_datos = FD.registros_500(datos)
+                
             except:
                 lista_datos = []
 

@@ -266,9 +266,6 @@ class Ingresos_Abila:
             print("No hay datos")
 
 
-
-
-
     def aporte_navidad(colectivo,fecha,consecutivo,path):
         
         ''' colectivo = NNJ-AM-V
@@ -390,10 +387,7 @@ class Consolidar:
          
         print("\n*************** FELICITACIONES SE GENERO CON EXITO ***************\n")
 
-        
-        
-
-        
+           
         
 ######################################### DESARROLLO EGRESO ###############################################################        
         
@@ -501,7 +495,6 @@ class Egreso_Abila:
             print("No hay datos")
     
 
-
     def egreso_cumple(colectivo,empresa,fecha,consecutivo,path):
         
         ''' colectivo = NNJ-AM-V
@@ -596,11 +589,7 @@ class Egreso_Abila:
             print("\n*************** FELICITACIONES SE GENERO CON EXITO ***************\n")
         except:
             print("No hay datos")
-            
-            
-
-            
-            
+                 
             
     def egreso_regalo(colectivo,empresa,fecha,consecutivo,path):
         
@@ -697,12 +686,7 @@ class Egreso_Abila:
         except:
             print("No hay datos")
         
-        
-        
-        
-        
-        
-        
+          
     def egreso_fomentado(colectivo,empresa,fecha,consecutivo,path):
         
         ''' empresa = BANCOLOMBIA o EFECTY
@@ -790,7 +774,6 @@ class Egreso_Abila:
         except:
             print("No hay datos")
 
-    
 
     def egreso_necesidades(colectivo,empresa,fecha,consecutivo,path):
         

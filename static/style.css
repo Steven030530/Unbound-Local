@@ -62,7 +62,9 @@
 
 
 footer{
-    border-top: 2px solid darkblue;
+    
+    margin-top: 114px;
+    border-top: 2px solid rgb(24, 24, 149);
     
 }
 
